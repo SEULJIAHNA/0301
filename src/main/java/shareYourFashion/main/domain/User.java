@@ -76,6 +76,8 @@ public class User extends BaseTimeEntity{
     // user 1 : n lookbook -> user 삭제 시 관련된 모든 lookbook 삭제
     @OneToMany(mappedBy = "writer" ,cascade = CascadeType.ALL , orphanRemoval = true)
     private List<LookBook> lookBooks = new   ArrayList<>();
+    @OneToMany(mappedBy = "writer" ,cascade = CascadeType.ALL , orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
     //== 연관관계 메소드 ==//
     public User hashPassword(PasswordEncoder passwordEncoder) {
@@ -107,6 +109,12 @@ public class User extends BaseTimeEntity{
         backgroundProfileImage.setUser(this);
     }
 
+    public void addComment(Comment comment){
+        //comment의 writer 설정은 comment에서 함
+        comments.add(comment);
+    }
+
+
 
     @Override
     public String toString() {
@@ -122,6 +130,7 @@ public class User extends BaseTimeEntity{
                 ", joinPath=" + joinPath +
                 '}';
     }
+
 
 
     //    // user 1 : n chat

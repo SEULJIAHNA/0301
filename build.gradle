@@ -31,6 +31,8 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+//	runtimeOnly 'com.h2database:h2'
 
 	// apache commons library 사용
 	implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'

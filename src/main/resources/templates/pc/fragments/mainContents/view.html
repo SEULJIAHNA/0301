@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<th:block th:fragment="view">
+    <!--부트스트랩 js, jquery 추가-->
+    <script th:inline="javascript">
+
+            $(document).ready(function() {
+                $("#btn-delete").on("click",()=> {
+                    deleteById();
+                });
+            });
+
+            const deleteById = function() {
+                let id = $("#id").val();
+                console.log(id);
+                console.log("/api/board/delete/"+id);
+                $.ajax({
+                    type : "POST",
+                    url : "/api/board/delete/"+id,
+                    dataType:"json"
+                    })
+                    .done(function(resp) {
+                        alert("삭제가 완료되었습니다.");
+                        location.href="/boards";
+                    })
+                    .fail( function(error) {
+                        alert(JSON.stringify(error));
+                    });
+                }
+
+<!--        $(document).ready(()=> {-->
+<!--            index.init();-->
+<!--        });-->
+    </script>
+
+    <div class="container">
+        <h1>Board View.</h1>
+        <form id="frm" action="/boards/view" method="post">
+            <input id = "id" type="hidden" name="id" th:value="${board.id}">
+            <div class="mb-3">
+                <label class="form-label">Title.</label>
+                <div class="form-control" name="title" th:utext="${board.title}"></div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">조회수</label>
+                <div class="form-control" name="viewCnt" th:utext="${board.view}"></div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Writer.</label>
+                <div class="form-control" name="author" th:utext="${board.author}"></div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Content</label>
+                <div class="form-control" name="content" th:utext="${board.content}"></div>
+                <!--<input type="text" class="form-control" name="" th:utext="${board.content}" readonly>-->
+                <!--<textarea class="form-control" rows="5" name="" th:text="${board.content}" readonly></textarea>-->
+            </div>
+
+            <a href="#" id = "btn - list" class="btn btn-success"  onclick="javascript:location.href='/boards'">목록으로</a>
+            <a href="#" id = "btn - edit" class="btn btn-success upt_btn"  th:href="@{/boards/form(id=${board.id})}">수정하기</a>
+            <!--<button type="button" id = "btn - edit"class="btn btn-success upt_btn" onclick="javascript:location.href='/boards/view?id='">수정하기</button>-->
+            <a href="#" id = "btn-delete" class="btn btn-success" onclick="deleteById(); return false;">삭제하기</a>
+
+
+            <div class="collapse" id="reply_card">
+                <section class="modal-section">
+                    <div class="card card-body">
+                        <!-- 댓글 목록 -->
+                        <div class="reply-list reply-list">
+                            <!-- 댓글이 목록이 들어가는 곳 -->
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </form>
+    </div>
+
+
+
+
+
+<!--    <script th:inline="javascript">-->
+
+<!--        let btn = $(".upt_btn");-->
+<!--        const UrlName = "";-->
+
+<!--        btn.on("click" , function() {-->
+<!--            const formdata = $("#frm").serializeArray();-->
+<!--            if(formdata.length == 0) return;-->
+
+<!--            requestUserDtoToServer(urlName , formDataObject )-->
+<!--        });-->
+
+<!--    </script>-->
+
+</th:block>
+</html>

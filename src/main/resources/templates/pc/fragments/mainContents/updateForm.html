@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<th:block th:fragment="form">
+<th:block th:fragment="updateForm">
     <script th:inline="javascript">
 
         $(document).ready(function() {
@@ -12,23 +12,15 @@
             });
           });
         function save(){
-            var id= $('input[name=id]').val();
             var formDataObject = $("#form1").serializeObject();
             var urlName = "/api/board";
-            var method = "POST";
-            if(id!='')
-            {
-                urlName = "/api/board/update";
-                //method = "PUT";
-            }
-            commonAjax(urlName, formDataObject, method);
+            requestUserDtoToServer(urlName, formDataObject);
         }
     </script>
     <div class="container">
         <form id="form1" name ="form1" class="validation-form" th:action="@{/api/board}" action="#" role="form" th:object="${board}"
               method="post" novalidate>
 
-            <input type="hidden" name="id" th:value="${board.id}">
             <div class="form-group">
                 <label for="title">Title:</label>
                 <input type="text" class="form-control" th:field="*{title}" placeholder="title" id="title" name="title">

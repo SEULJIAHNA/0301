@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <th:block  th:replace="pc/fragments/header :: html-head"></th:block>
+  <title>boards page</title>
+
+</head>
+<body>
+<!-- main header fragments-->
+<th:block  th:replace="pc/fragments/bodyHeader :: header"></th:block>
+
+<!--main content wrapper-->
+<th:block th:replace = "pc/fragments/mainContent :: mainContentWrapper('view')"></th:block>
+
+<!-- main footer fragments -->
+<th:block th:replace = "pc/fragments/footer :: footer"></th:block>
+<script src = "/js/pc/common/common_util_seul.js"></script>
+</body>
+</html>

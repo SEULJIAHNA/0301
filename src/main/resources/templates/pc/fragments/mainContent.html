@@ -21,6 +21,14 @@
             <th:block th:replace = "pc/fragments/mainContents/form :: form"></th:block>
         </th:block>
 
+        <th:block th:if = "${mainContent == 'updateForm'}">
+            <th:block th:replace = "pc/fragments/mainContents/updateForm :: updateForm"></th:block>
+        </th:block>
+
+        <th:block th:if = "${mainContent == 'view'}">
+            <th:block th:replace = "pc/fragments/mainContents/view :: view"></th:block>
+        </th:block>
+
         <th:block th:if = "${mainContent == 'mainPage'}">
             <th:block th:replace = "pc/fragments/mainContents/mainPage :: mainPage"></th:block>
         </th:block>

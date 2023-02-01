@@ -3,26 +3,31 @@
 <th:block th:fragment = "board">
 
     <h2>게시판</h2>
-    <div>총 건수: <span th:text="${count}"></span></div>
-    <form class="row g-3 d-flex justify-content-end" method="GET"> <!--th:action="#"-->
+    <div>총 건수: <span th:text="${boards.totalElements}"></span></div>
+    <form class="row g-3 d-flex justify-content-end" method="GET" th:action="@{/boards}">
         <div class="col-auto">
             <label for="searchText" class="sr-only">검색</label>
-            <input type="text" class="form-control" id="searchText" name="searchText" th:value="ss">
+            <input type="text" class="form-control" id="searchText" name="searchText" th:value="${param.searchText}">
         </div>
         <div class="col-auto">
-            <button type="submit" class="btn btn-light mb-3">검색</button>
+            <button type="submit" class="btn btn-light mb-1">검색</button>
         </div>
     </form>
+    <div class="text-right">
+        <a type="button" class="btn btn-primary" th:href="@{/boards/form}">쓰기</a>
+    </div>
 
-    <div class="row mb-2">
+    <div class="row mb-1" th:each="board : ${boards}">
         <div class="p-4 p-md-5 mb-4">
             <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
                 <div class="col p-4 d-flex flex-column position-static">
-                    <strong class="d-inline-block mb-2 text-primary">제목</strong>
-                    <h3 class="mb-0">Featured post</h3>
-                    <div class="mb-1 text-muted">Nov 12</div>
-                    <p class="card-text mb-auto">This is a wider card with supporting text below as a natural lead-in to additional content.</p>
-                    <a href="#" class="stretched-link">Continue reading</a>
+                    <strong class="d-inline-block mb-2 text-primary" th:text="${board.id}"></strong>
+                    <strong class="d-inline-block mb-2 text-primary" th:text="${board.view}"></strong> <!--적용안됨-->
+                    <h3 class="mb-0" th:text="${board.title}" th:href="@{/board/form(id=${board.id})}">제목</h3>
+                    <div class="mb-1 text-muted" th:text="${board.author}">작성자</div>
+                    <a href="#" class="stretched-link" th:utext="${board.content}" th:href="@{/boards/view(id=${board.id})}">내용</a>
+                    <p class="card-text mb-auto" th:text="${board.createdDate}">날짜</p>
+
                 </div>
                 <div class="col-auto d-none d-lg-block">
                     <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
@@ -30,10 +35,26 @@
             </div>
         </div>
     </div>
+    </tr>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <li class="page-item " th:classappend="${1== boards.pageable.pageNumber +1} ? 'disabled'">
+                <a class="page-link" href=#
+                   th:href="@{/boards(page=${boards.pageable.pageNumber -1}, searchText = ${param.searchText})}">Previous</a>
+            </li>
+            <li class="page-item" th:classappend="${i== boards.pageable.pageNumber +1} ? 'disabled'"
+                th:each="i: ${#numbers.sequence(startPage, endPage)}">
+                <a class="page-link" href=# th:href="@{/boards(page=${i -1}, searchText = ${param.searchText})}"
+                   th:text="${i}">1</a>
+            </li>
+            <li class="page-item"
+                th:classappend="${boards.totalPages== boards.pageable.pageNumber +1} ? 'disabled'">
+                <a class="page-link" href="#"
+                   th:href="@{/boards(page=${boards.pageable.pageNumber +1}, searchText = ${param.searchText})}">Next</a>
+            </li>
+        </ul>
+    </nav>
 
-    <div class="text-right">
-        <a type="button" class="btn btn-primary" th:href="@{/boards/form}">쓰기</a>
-    </div>
 
     <div  class = "board_main_wrapper">
         <div class = "sorting_tool">

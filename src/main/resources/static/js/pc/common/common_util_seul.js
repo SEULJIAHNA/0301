@@ -3,17 +3,16 @@ let timer2;
 let timerOfPassword;
 
 /*userRequestDto to server using ajax*/
-function requestUserDtoToServer(urlName , formDataObject ) {
+function commonAjax(urlName , formDataObject , method) {
 
     //console.log(JSON.stringify(formDataObject));
 
     $.ajax({
-        type : "POST",
+        type : method,
         url: urlName,
         data : JSON.stringify(formDataObject), // http body에 넣을 데이터
         contentType:"application/json; charset=utf-8" , // body data type : json
     }).done(function(result , textStatus , xhr ) {
-        alert(result.responseText);
         // 응답 성공 시 로직
         window.location = xhr.getResponseHeader("Location");
     }).fail(function(error){

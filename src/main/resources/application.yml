@@ -26,7 +26,7 @@ spring:
   #  mysql 연결
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/pcProjectDB?serverTimezone=Asia/Seoul
+    url: jdbc:mysql://localhost:3306/pcProjectDB?serverTimezone=Asia/Seoul&useUnicode=true&characterEncoding=utf8
     username: root
     password: 1234
     hikari:
