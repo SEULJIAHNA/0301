@@ -87,14 +87,18 @@ public class BoardController {
     }
 
     @GetMapping(value = BOARD_CONTENT_VIEW_PAGE_URL) //게시글 상세조회 "/boards/view";
-    public String getBoardViewPage(Model m, BoardRequestDTO boardRequestDTO, HttpServletRequest request, HttpServletResponse response,
+    public String getBoardViewPage(@PathVariable Long id, Model m, BoardRequestDTO boardRequestDTO, HttpServletRequest request, HttpServletResponse response,
                                     @PageableDefault(page = 0, size = 10, direction = Sort.Direction.DESC) Pageable pageable) throws Exception{
         try {
             if(boardRequestDTO.getId() != null){
                 Page<Comment> commentList = commentRepository.findAll(pageable);
                 int startPage = Math.max(1, commentList.getPageable().getPageNumber() - 4);
                 int endPage = Math.min(commentList.getTotalPages(), commentList.getPageable().getPageNumber() + 4);
+                if (commentList != null && !commentList.isEmpty()){
+                    m.addAttribute("comment",commentList);
+                }
 
+//                m.addAttribute("board",boardService.(id));//0203 아까 서비스때문에 중단
                 m.addAttribute("startPage", startPage);
                 m.addAttribute("endPage", endPage);
                 m.addAttribute("commentList", commentList);

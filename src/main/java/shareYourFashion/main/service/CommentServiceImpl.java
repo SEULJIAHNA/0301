@@ -73,6 +73,11 @@ public class CommentServiceImpl implements CommentService{
         commentRepository.deleteAll(removableCommentList);
     }
 
+//    public CommentInfoDTO findById(Long id) {  0203리스트 작성하다가 멈춘거
+//        Comment entity = commentRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
+//
+////        return new CommentInfoDTO(entity);
+//    }
 
 //    @Transactional(readOnly = true)
 //    public HashMap< String, Object > findAll(Integer page, Integer size) {

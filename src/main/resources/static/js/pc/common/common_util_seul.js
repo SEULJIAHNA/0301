@@ -1,4 +1,4 @@
-// 비동기 방식의 중복확인 구현
+/* 비동기 방식의 중복확인 구현*/
 let timer2;
 let timerOfPassword;
 
