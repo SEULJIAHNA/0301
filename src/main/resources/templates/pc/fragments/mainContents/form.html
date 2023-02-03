@@ -23,9 +23,46 @@
             }
             commonAjax(urlName, formDataObject, method);
         }
+
+       $('.summernote').summernote({
+	height : 500,
+	lang: "ko-KR",
+	minHeight : null,
+	maxHeight : null,
+	focus : true,
+	callbacks : {
+		onImageUpload : function(files, editor, welEditable) {
+			for (var i = 0; i < files.length; i++) {
+				sendFile(files[i], this);
+			}
+		}
+	}
+});
+
+function sendFile(file, editor) {
+	var form_data = new FormData();
+	form_data.append('file', file);
+	$.ajax({
+		data : form_data,
+		type : "POST",
+		url : '/resources/summerimages',
+		cache : false,
+		contentType : false,
+		enctype : 'multipart/form-data',
+		processData : false,
+		success : function(url) {
+			$(editor).summernote('insertImage', url, function($image) {
+				$image.css('width', "25%");
+			});
+		}
+	});
+}
+
+
     </script>
     <div class="container">
-        <form id="form1" name ="form1" class="validation-form" th:action="@{/api/board}" action="#" role="form" th:object="${board}"
+        <form id="form1" name="form1" class="validation-form" th:action="@{/api/board}" action="#" role="form"
+              th:object="${board}"
               method="post" novalidate>
 
             <input type="hidden" name="id" th:value="${board.id}">
@@ -39,8 +76,10 @@
                 <textarea class="form-control" th:field="*{content}" rows="5" id="content" name="content"></textarea>
             </div>
             <div class="right-box">
-                <input type="button" value="글쓰기 등록" class="btn btn-primary" onclick="save(); return false;">
+                <input type="button" value="등록하기" class="btn btn-primary" onclick="save(); return false;">
+                <input type="button" value="목록으로" class="btn btn-primary" onclick="javascript:location.href='/boards'">
             </div>
+
         </form>
     </div>
 </th:block>

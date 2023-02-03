@@ -2,41 +2,93 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <th:block th:fragment="view">
     <!--부트스트랩 js, jquery 추가-->
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.js" integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY=" crossorigin="anonymous"></script>
     <script th:inline="javascript">
 
-            $(document).ready(function() {
-                $("#btn-delete").on("click",()=> {
-                    deleteById();
-                });
+        $(document).ready(function() {
+            $("#btn-delete").on("click",()=> {
+                this.deleteById();
             });
+        });
 
-            const deleteById = function() {
-                let id = $("#id").val();
-                console.log(id);
-                console.log("/api/board/delete/"+id);
-                $.ajax({
-                    type : "POST",
-                    url : "/api/board/delete/"+id,
-                    dataType:"json"
-                    })
-                    .done(function(resp) {
-                        alert("삭제가 완료되었습니다.");
-                        location.href="/boards";
-                    })
-                    .fail( function(error) {
-                        alert(JSON.stringify(error));
-                    });
-                }
+        function deleteById() {
+            let id = $("#id").val();
 
-<!--        $(document).ready(()=> {-->
-<!--            index.init();-->
-<!--        });-->
+            $.ajax({
+                type : "POST",
+                url : "/api/board/delete/"+id,
+                dataType:"json"
+                })
+                .done(function(resp) {
+                    alert("삭제가 완료되었습니다.");
+                    location.href="/boards";
+                })
+                .fail( function(error) {
+                    alert(JSON.stringify(error));
+                });
+             };
+
+<!--    const main = {-->
+<!--        init : function() {-->
+<!--                const _this = this;-->
+
+<!--                // 댓글 저장-->
+<!--                $('#btn-save').on('click', function () {-->
+<!--            _this.commentSave();-->
+<!--                        });-->
+
+<!--                    },-->
+<!--                 /** 댓글 저장 */-->
+<!--                    commentSave : function () {-->
+<!--                    const data = {-->
+<!--                        boardId: $('#boardId').val(),-->
+<!--                        comment: $('#comment').val()-->
+<!--                        }-->
+
+<!--                // 공백 및 빈 문자열 체크-->
+<!--                if (!data.comment || data.comment.trim() === "") {-->
+<!--                    alert("공백 또는 입력하지 않은 부분이 있습니다.");-->
+<!--                    return false;-->
+<!--                } else {-->
+<!--                    $.ajax({-->
+<!--                        type: 'POST',-->
+<!--                        url: '/api/comments/'+data.boardId,-->
+<!--                        dataType: 'JSON',-->
+<!--                        contentType: 'application/json; charset=utf-8',-->
+<!--                        data: JSON.stringify(data)-->
+<!--                    }).done(function () {-->
+<!--                        alert('댓글이 등록되었습니다.');-->
+<!--                        window.location.reload();-->
+<!--                    }).fail(function (error) {-->
+<!--                        alert(JSON.stringify(error));-->
+<!--                    });-->
+<!--                }-->
+<!--            }-->
+<!--        };-->
+
+
+<!--    main.init();-->
+
+    $(document).ready(function(){
+    $("#btn-save").on("click",()=> {
+                this.commentSave();
+            });
+        });
+        function commentSave(){
+            var id= $('input[name=id]').val();
+            var formDataObject = $("#formc").serializeObject();
+            var urlName = "/api/comments";
+            var method = "POST";
+            commonAjax(urlName, formDataObject, method);
+        }
+
+
     </script>
 
     <div class="container">
         <h1>Board View.</h1>
-        <form id="frm" action="/boards/view" method="post">
-            <input id = "id" type="hidden" name="id" th:value="${board.id}">
+        <form id="frm" action="/boards/view" method="post" th:object="${board}">
+            <input id="id" type="hidden" name="id" th:value="${board.id}">
             <div class="mb-3">
                 <label class="form-label">Title.</label>
                 <div class="form-control" name="title" th:utext="${board.title}"></div>
@@ -56,42 +108,114 @@
                 <!--<textarea class="form-control" rows="5" name="" th:text="${board.content}" readonly></textarea>-->
             </div>
 
-            <a href="#" id = "btn - list" class="btn btn-success"  onclick="javascript:location.href='/boards'">목록으로</a>
-            <a href="#" id = "btn - edit" class="btn btn-success upt_btn"  th:href="@{/boards/form(id=${board.id})}">수정하기</a>
+            <a href="#" id="btn - list" class="btn btn-success" onclick="javascript:location.href='/boards'">목록으로</a>
+            <a href="#" id="btn - edit" class="btn btn-success upt_btn"
+               th:href="@{/boards/form(id=${board.id})}">수정하기</a>
             <!--<button type="button" id = "btn - edit"class="btn btn-success upt_btn" onclick="javascript:location.href='/boards/view?id='">수정하기</button>-->
-            <a href="#" id = "btn-delete" class="btn btn-success" onclick="deleteById(); return false;">삭제하기</a>
+            <a href="#" id="btn-delete" class="btn btn-success" onclick="deleteById(); return false;">삭제하기</a>
 
+            <div>
 
-            <div class="collapse" id="reply_card">
-                <section class="modal-section">
-                    <div class="card card-body">
-                        <!-- 댓글 목록 -->
-                        <div class="reply-list reply-list">
-                            <!-- 댓글이 목록이 들어가는 곳 -->
-                        </div>
-                    </div>
-                </section>
+                <form id="formc" name="formc" method="post" action="/api/comments" th:object="${comments}">
+
+                                <div class="card mb-2 mt-5">
+                                    <div class="card-header bg-light">
+                                        <i class="fa fa-comment fa"></i> 댓글
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item">
+                                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="1"
+                                                          placeholder="댓글을 입력하세요"></textarea>
+                                                <div class="right-box">
+                                                    <input type="button" id="btn-save" value="등록" class="btn btn-dark mt-3" onclick="commentSave(); return false;">
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                </form>
+
             </div>
+<!--            <div class="card mb-2 mt-5">-->
+<!--                <div class="card-header bg-light">-->
+<!--                    <i class="fa fa-comment fa"></i> 댓글-->
+<!--                </div>-->
+<!--                <div class="card-body">-->
+<!--                    <ul class="list-group list-group-flush">-->
+<!--                        <li class="list-group-item">-->
+<!--                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="1"-->
+<!--                                      placeholder="댓글을 입력하세요"></textarea>-->
+<!--                            <div class="right-box">-->
+<!--                                <input type="button" id="btn-save" value="등록" class="btn btn-dark mt-3" onclick="commentSave(); return false;">-->
+<!--                            </div>-->
+<!--                            <a href="#" id="btn-save" class="btn btn-dark mt-3"
+                                   onclick="commentSave(); return false;">등록</a>-->
+<!--                        </li>-->
+<!--                    </ul>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="card">-->
+<!--                <div class="card-header">댓글</div>-->
+<!--                <ul id="reply&#45;&#45;box" class="list-group" th:each="comment : ${comments}">-->
+<!--                    <li id="reply&#45;&#45;1" class="list-group-item d-flex justify-content-between">-->
+<!--                        <div th:text="${comment.content}"></div>-->
+<!--                        <div class="d-flex">-->
+<!--                            <span class="text-monospace mr-1">작성자: </span>-->
+<!--                            <div class="text-monospace mr-1" th:text="${comment.writer.nickname}"></div>-->
+<!--                            <button class="badge btn-danger">삭제</button>-->
+<!--                        </div>-->
+<!--                    </li>-->
+<!--                </ul>-->
+<!--            </div>-->
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item " th:classappend="${1== commentList.pageable.pageNumber +1} ? 'disabled'">
+                        <a class="page-link" href=#
+                           th:href="@{/view/{id}(page=${commentList.pageable.pageNumber -1})}">Previous</a>
+                    </li>
+                    <li class="page-item" th:classappend="${i== commentList.pageable.pageNumber +1} ? 'disabled'"
+                        th:each="i: ${#numbers.sequence(startPage, endPage)}">
+                        <a class="page-link" href=# th:href="@{/view/{id}(page=${i -1})}"
+                           th:text="${i}">1</a>
+                    </li>
+                    <li class="page-item"
+                        th:classappend="${commentList.totalPages== commentList.pageable.pageNumber +1} ? 'disabled'">
+                        <a class="page-link" href="#"
+                           th:href="@{/view/{id}(page=${commentList.pageable.pageNumber +1})}">Next</a>
+                    </li>
+                </ul>
+            </nav>
+
+
+            <!--            <div class="collapse" id="reply_card">-->
+            <!--                <section class="modal-section">-->
+            <!--                    <div class="card card-body">-->
+            <!--                        &lt;!&ndash; 댓글 목록 &ndash;&gt;-->
+            <!--                        <div class="reply-list reply-list">-->
+            <!--                            &lt;!&ndash; 댓글이 목록이 들어가는 곳 &ndash;&gt;-->
+            <!--                        </div>-->
+            <!--                    </div>-->
+            <!--                </section>-->
+            <!--            </div>-->
         </form>
     </div>
 
 
+    <!--    <script th:inline="javascript">-->
 
+    <!--        let btn = $(".upt_btn");-->
+    <!--        const UrlName = "";-->
 
+    <!--        btn.on("click" , function() {-->
+    <!--            const formdata = $("#frm").serializeArray();-->
+    <!--            if(formdata.length == 0) return;-->
 
-<!--    <script th:inline="javascript">-->
+    <!--            requestUserDtoToServer(urlName , formDataObject )-->
+    <!--        });-->
 
-<!--        let btn = $(".upt_btn");-->
-<!--        const UrlName = "";-->
+    <!--    </script>-->
 
-<!--        btn.on("click" , function() {-->
-<!--            const formdata = $("#frm").serializeArray();-->
-<!--            if(formdata.length == 0) return;-->
-
-<!--            requestUserDtoToServer(urlName , formDataObject )-->
-<!--        });-->
-
-<!--    </script>-->
 
 </th:block>
 </html>

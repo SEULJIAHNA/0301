@@ -13,8 +13,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import shareYourFashion.main.domain.Board;
+import shareYourFashion.main.domain.Comment;
 import shareYourFashion.main.dto.BoardRequestDTO;
 import shareYourFashion.main.repository.BoardRepository;
+import shareYourFashion.main.repository.CommentRepository;
 import shareYourFashion.main.service.BoardService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +31,8 @@ public class BoardController {
 
     private final BoardRepository boardRepository;
     private final BoardService boardService;
+    private final CommentRepository commentRepository;
+
 
     private static Logger logger = Logger.getLogger(BoardController.class.getName());
 
@@ -83,10 +87,19 @@ public class BoardController {
     }
 
     @GetMapping(value = BOARD_CONTENT_VIEW_PAGE_URL) //게시글 상세조회 "/boards/view";
-    public String getBoardViewPage(Model m, BoardRequestDTO boardRequestDTO, HttpServletRequest request, HttpServletResponse response) throws Exception{
+    public String getBoardViewPage(Model m, BoardRequestDTO boardRequestDTO, HttpServletRequest request, HttpServletResponse response,
+                                    @PageableDefault(page = 0, size = 10, direction = Sort.Direction.DESC) Pageable pageable) throws Exception{
         try {
             if(boardRequestDTO.getId() != null){
-                    boardService.updateView(boardRequestDTO.getId(), request, response);
+                Page<Comment> commentList = commentRepository.findAll(pageable);
+                int startPage = Math.max(1, commentList.getPageable().getPageNumber() - 4);
+                int endPage = Math.min(commentList.getTotalPages(), commentList.getPageable().getPageNumber() + 4);
+
+                m.addAttribute("startPage", startPage);
+                m.addAttribute("endPage", endPage);
+                m.addAttribute("commentList", commentList);
+                boardService.updateView(boardRequestDTO.getId(), request, response);
+
                 m.addAttribute("board", boardService.findById(boardRequestDTO.getId()));
             }
         } catch (Exception e) {
