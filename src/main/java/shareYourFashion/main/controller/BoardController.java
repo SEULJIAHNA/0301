@@ -98,6 +98,7 @@ public class BoardController {
                     m.addAttribute("comment",commentList);
                 }
 
+
 //                m.addAttribute("board",boardService.(id));//0203 아까 서비스때문에 중단
                 m.addAttribute("startPage", startPage);
                 m.addAttribute("endPage", endPage);
