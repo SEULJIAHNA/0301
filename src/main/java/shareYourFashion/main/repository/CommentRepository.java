@@ -5,4 +5,6 @@ import shareYourFashion.main.domain.Comment;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
+
+
 }

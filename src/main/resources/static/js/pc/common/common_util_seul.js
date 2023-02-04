@@ -1,6 +1,3 @@
-/* 비동기 방식의 중복확인 구현*/
-let timer2;
-let timerOfPassword;
 
 /*userRequestDto to server using ajax*/
 function commonAjax(urlName , formDataObject , method) {

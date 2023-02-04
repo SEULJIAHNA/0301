@@ -2,6 +2,7 @@ package shareYourFashion.main.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,12 +13,13 @@ import shareYourFashion.main.dto.BoardRequestDTO;
 import shareYourFashion.main.dto.BoardSaveRequestDTO;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
 //    List<Board> findAll(String title);
     List<Board> findByTitleOrContent(String title, String content);
-    Page<Board> findByTitleContainingOrContentContaining(String title, String Content, Pageable Pageable);
+    Page<Board> findByTitleContainingOrContentContaining(String title, String content, Pageable Pageable);
 
 //    public Long save(BoardSaveRequestDTO saveDTO);
 
@@ -62,5 +64,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Query(value = UPDATE_BOARD_READ_CNT_INC, nativeQuery = true)
     int updateView(@Param(value = "id") Long id);
 
+    @EntityGraph(attributePaths = {"author"})
+    Optional<Board> findWithAuthorById(Long id);
 
 }

@@ -2,9 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <th:block th:fragment="view">
     <!--부트스트랩 js, jquery 추가-->
-    <script src="https://code.jquery.com/jquery-3.6.0.slim.js" integrity="sha256-HwWONEZrpuoh951cQD1ov2HUK5zA5DwJ1DNUXaM6FsY=" crossorigin="anonymous"></script>
     <script th:inline="javascript">
-
         $(document).ready(function() {
             $("#btn-delete").on("click",()=> {
                 this.deleteById();
@@ -37,9 +35,9 @@
 <!--            _this.commentSave();-->
 <!--                        });-->
 
-<!--                    },-->
+
 <!--                 /** 댓글 저장 */-->
-<!--                    commentSave : function () {-->
+<!--                     function commentSave() {-->
 <!--                    const data = {-->
 <!--                        boardId: $('#boardId').val(),-->
 <!--                        comment: $('#comment').val()-->
@@ -52,7 +50,7 @@
 <!--                } else {-->
 <!--                    $.ajax({-->
 <!--                        type: 'POST',-->
-<!--                        url: '/api/comments/'+data.boardId,-->
+<!--                        url: "/boards/view/"+data.boardId+"/comments",-->
 <!--                        dataType: 'JSON',-->
 <!--                        contentType: 'application/json; charset=utf-8',-->
 <!--                        data: JSON.stringify(data)-->
@@ -63,31 +61,31 @@
 <!--                        alert(JSON.stringify(error));-->
 <!--                    });-->
 <!--                }-->
-<!--            }-->
-<!--        };-->
+<!--            };-->
+
 
 
 <!--    main.init();-->
-
     $(document).ready(function(){
-    $("#btn-save").on("click",()=> {
-                this.commentSave();
-            });
+        $("#btn-save").on("click",()=> {
+            commentSave();
         });
-        function commentSave(){
-            var id= $('input[name=id]').val();
-            var formDataObject = $("#formc").serializeObject();
-            var urlName = "/api/comments";
-            var method = "POST";
-            commonAjax(urlName, formDataObject, method);
-        }
+    });
+
+    function commentSave(){
+        var id= $('input[name=id]').val();
+        var formDataObject = $("#frm2").serializeObject();
+        var urlName = "/boards/view/"+id+"/comments";
+        var method = "POST";
+        commonAjax(urlName, formDataObject, method);
+    }
 
 
     </script>
 
     <div class="container">
         <h1>Board View.</h1>
-        <form id="frm" action="/boards/view" method="post" th:object="${board}">
+            <form id="frm" action="/boards/view" method="post" th:object="${board}">
             <input id="id" type="hidden" name="id" th:value="${board.id}">
             <div class="mb-3">
                 <label class="form-label">Title.</label>
@@ -113,10 +111,10 @@
                th:href="@{/boards/form(id=${board.id})}">수정하기</a>
             <!--<button type="button" id = "btn - edit"class="btn btn-success upt_btn" onclick="javascript:location.href='/boards/view?id='">수정하기</button>-->
             <a href="#" id="btn-delete" class="btn btn-success" onclick="deleteById(); return false;">삭제하기</a>
-
+            </form>
             <div>
 
-                <form id="formc" name="formc" method="post" action="/api/comments" th:object="${comments}">
+                <form id="frm2" method="post" th:object="${comment}">
 
                                 <div class="card mb-2 mt-5">
                                     <div class="card-header bg-light">
@@ -125,10 +123,10 @@
                                     <div class="card-body">
                                         <ul class="list-group list-group-flush">
                                             <li class="list-group-item">
-                                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="1"
+                                                <textarea name = "content" class="form-control" id="exampleFormControlTextarea1" rows="1"
                                                           placeholder="댓글을 입력하세요"></textarea>
                                                 <div class="right-box">
-                                                    <input type="button" id="btn-save" value="등록" class="btn btn-dark mt-3" onclick="commentSave(); return false;">
+                                                    <input type="button" id="btn-save" value="등록" class="btn btn-dark mt-3">
                                                 </div>
                                             </li>
                                         </ul>
@@ -161,31 +159,31 @@
                     <li id="reply--1" class="list-group-item d-flex justify-content-between">
                         <div th:text="${comment.content}"></div>
                         <span class="text-monospace mr-1">작성자: </span>
-                        <div class="text-monospace mr-1" th:text="${comment.writer.nickname}"></div>
+                        <div class="text-monospace mr-1"  th:text="${comment.writerDto.nickName}"></div>
                         <div class="d-flex">
                             <button class="badge btn-danger">삭제</button>
                         </div>
                     </li>
                 </ul>
             </div>
-            <nav aria-label="Page navigation example">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item " th:classappend="${1== commentList.pageable.pageNumber +1} ? 'disabled'">
-                        <a class="page-link" href=#
-                           th:href="@{/view/{id}(page=${commentList.pageable.pageNumber -1})}">Previous</a>
-                    </li>
-                    <li class="page-item" th:classappend="${i== commentList.pageable.pageNumber +1} ? 'disabled'"
-                        th:each="i: ${#numbers.sequence(startPage, endPage)}">
-                        <a class="page-link" href=# th:href="@{/view/{id}(page=${i -1})}"
-                           th:text="${i}">1</a>
-                    </li>
-                    <li class="page-item"
-                        th:classappend="${commentList.totalPages== commentList.pageable.pageNumber +1} ? 'disabled'">
-                        <a class="page-link" href="#"
-                           th:href="@{/view/{id}(page=${commentList.pageable.pageNumber +1})}">Next</a>
-                    </li>
-                </ul>
-            </nav>
+<!--            <nav aria-label="Page navigation example">-->
+<!--                <ul class="pagination justify-content-center">-->
+<!--                    <li class="page-item " th:classappend="${1== commentList.pageable.pageNumber +1} ? 'disabled'">-->
+<!--                        <a class="page-link" href=#-->
+<!--                           th:href="@{/view/{id}(page=${commentList.pageable.pageNumber -1})}">Previous</a>-->
+<!--                    </li>-->
+<!--                    <li class="page-item" th:classappend="${i== commentList.pageable.pageNumber +1} ? 'disabled'"-->
+<!--                        th:each="i: ${#numbers.sequence(startPage, endPage)}">-->
+<!--                        <a class="page-link" href=# th:href="@{/view/{id}(page=${i -1})}"-->
+<!--                           th:text="${i}">1</a>-->
+<!--                    </li>-->
+<!--                    <li class="page-item"-->
+<!--                        th:classappend="${commentList.totalPages== commentList.pageable.pageNumber +1} ? 'disabled'">-->
+<!--                        <a class="page-link" href="#"-->
+<!--                           th:href="@{/view/{id}(page=${commentList.pageable.pageNumber +1})}">Next</a>-->
+<!--                    </li>-->
+<!--                </ul>-->
+<!--            </nav>-->
 
 
             <!--            <div class="collapse" id="reply_card">-->
@@ -198,7 +196,6 @@
             <!--                    </div>-->
             <!--                </section>-->
             <!--            </div>-->
-        </form>
     </div>
 
 

@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shareYourFashion.main.config.auth.SecurityUtil;
 import shareYourFashion.main.domain.Board;
+import shareYourFashion.main.domain.User;
 import shareYourFashion.main.dto.BoardResponseDTO;
 import shareYourFashion.main.dto.CommentInfoDTO;
+import shareYourFashion.main.dto.ReCommentInfoDTO;
 import shareYourFashion.main.exception.comment.*;
 import shareYourFashion.main.domain.Comment;
 import shareYourFashion.main.dto.CommentSaveDTO;
@@ -17,8 +19,10 @@ import shareYourFashion.main.repository.CommentRepository;
 import shareYourFashion.main.repository.UserRepository;
 
 
+import javax.swing.text.html.parser.Entity;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,12 +37,13 @@ public class CommentServiceImpl implements CommentService{
     @Override
     public void save(Long boardId, CommentSaveDTO commentSaveDTO) {
         Comment comment = commentSaveDTO.toEntity();
-
-        comment.confirmWriter(userRepository.findByNickname(SecurityUtil.getLoginNickname()).orElseThrow(() -> new UserException(UserExceptionType.NOT_FOUND_USER)));
-
+//        comment.confirmWriter(userRepository.findByNickname(SecurityUtil.getLoginNickname()).orElseThrow(() -> new UserException(UserExceptionType.NOT_FOUND_USER)));
         comment.confirmBoard(boardRepository.findById(boardId).orElseThrow(() -> new BoardException(BoardExceptionType.BOARD_NOT_POUND)));
-
-
+        comment.confirmParent(comment);
+        // 추후 로그인 적용시 삭제 필수!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        Long aLong = 1L;
+        Optional<User> user = userRepository.findById(aLong);
+        comment.confirmWriter(user.get());
         commentRepository.save(comment);
 
     }
@@ -73,10 +78,11 @@ public class CommentServiceImpl implements CommentService{
         commentRepository.deleteAll(removableCommentList);
     }
 
-//    public CommentInfoDTO findById(Long id) {  0203리스트 작성하다가 멈춘거
+//    public CommentInfoDTO findById(Long id) {  //0203리스트 작성하다가 멈춘거
 //        Comment entity = commentRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
+//        ReCommentInfoDTO reCommentInfoDTO = CommentInfoDTO.get;
 //
-////        return new CommentInfoDTO(entity);
+//        return new CommentInfoDTO(entity, reCommentInfoDTO);
 //    }
 
 //    @Transactional(readOnly = true)

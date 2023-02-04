@@ -12,7 +12,8 @@ public class SecurityUtil {
 
         PrincipalDetails user = (PrincipalDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        return user.getNickname();
+        //return user.getNickname();  //로그인시변경
+        return "asdf";
     }
 
 }

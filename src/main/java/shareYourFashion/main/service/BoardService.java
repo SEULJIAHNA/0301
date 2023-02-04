@@ -3,6 +3,7 @@ package shareYourFashion.main.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shareYourFashion.main.domain.Board;
@@ -10,6 +11,8 @@ import shareYourFashion.main.dto.BoardRequestDTO;
 import shareYourFashion.main.dto.BoardResponseDTO;
 import shareYourFashion.main.dto.BoardSaveRequestDTO;
 import shareYourFashion.main.dto.BoardUpdateDTO;
+import shareYourFashion.main.exception.comment.BaseException;
+import shareYourFashion.main.exception.comment.BoardException;
 import shareYourFashion.main.repository.BoardRepository;
 
 import javax.servlet.http.Cookie;
@@ -64,8 +67,33 @@ public class BoardService {
     public BoardResponseDTO findById(Long id){
         return new BoardResponseDTO(boardRepository.findById(id).get());
 
+
     }
 
+    @Transactional
+    public Page<Board> findByTitleContainingOrContentContaining(String title, String content, Pageable Pageable) {
+        return boardRepository.findByTitleContainingOrContentContaining(title, content, Pageable);
+    }
+
+
+    public BoardResponseDTO getBoardResponseDTO(Long id) {
+
+
+        /**
+         * Post + MEMBER 조회 -> 쿼리 1번 발생
+         *
+         * 댓글&대댓글 리스트 조회 -> 쿼리 1번 발생(POST ID로 찾는 것이므로, IN쿼리가 아닌 일반 where문 발생)
+         * (댓글과 대댓글 모두 Comment 클래스이므로, JPA는 구분할 방법이 없어서, 당연히 CommentList에 모두 나오는것이 맞다,
+         * 가지고 온 것을 가지고 우리가 구분지어주어야 한다.)
+         *
+         * 댓글 작성자 정보 조회 -> 배치사이즈를 이용했기때문에 쿼리 1번 발생
+         *
+         *
+         */
+        return new BoardResponseDTO(boardRepository.findWithAuthorById(id)
+                .orElseThrow(() -> new BoardException()));
+
+    }
 
     public void deleteById(Long id) {
         boardRepository.deleteById(id);

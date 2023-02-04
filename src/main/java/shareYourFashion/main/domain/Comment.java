@@ -45,7 +45,6 @@ public class Comment extends BaseTimeEntity {
     @JoinColumn(name = "parent_id")
     private Comment parent;
 
-    @Null
     @Max(2)
     @Min(0)
     private int cDepth;

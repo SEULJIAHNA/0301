@@ -46,9 +46,9 @@ public class BoardApiController {
         HttpHeaders headers = new HttpHeaders();
         UriComponents uriComponents;
         try {
-            Long save = boardService.save(newBoardSaveRequestDTO);
+            Long id = boardService.save(newBoardSaveRequestDTO);
             /*저장 성공 후 boards 페이지로 리다이렉트*/
-            uriComponents = b.fromUriString("/boards/view"+ save).build();
+            uriComponents = b.fromUriString("/boards/view?id="+ id).build();
             headers.setLocation(uriComponents.toUri());
         }catch (Exception e){
             e.printStackTrace();

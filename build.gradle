@@ -6,7 +6,7 @@ plugins {
 
 group = 'shareYourFashion'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = "16"
 
 configurations {
 	compileOnly {
@@ -78,3 +78,4 @@ task copyFrontLib(type: Copy) {
 
 //copyFrontLib.dependsOn npmInstall
 compileJava.dependsOn copyFrontLib
+targetCompatibility = JavaVersion.VERSION_16

@@ -8,7 +8,8 @@ public class BoardException extends BaseException {
     public BoardException(BaseExceptionType baseExceptionType) {
         this.baseExceptionType = baseExceptionType;
     }
-
+    public BoardException() {
+    }
     @Override
     public BaseExceptionType getExceptionType() {
         return this.baseExceptionType;

@@ -25,37 +25,32 @@ public class CommentApiController {
     private final CommentService commentService;
     private final CommentRepository commentRepository;
 
-    @GetMapping("/api/comments")
-    List<Comment> all(@PathVariable Long boardId) {
-            return commentRepository.findAll();
-
-    }
 
 
-    @PostMapping("/api/comments")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void Save(@PathVariable("boardId")Long boardId, CommentSaveDTO commentSaveDTO){
-        commentService.save(boardId, commentSaveDTO);
-    }
-
-
-
-//    @PostMapping("/api/comments")//글저장
-//    ResponseEntity<?>  commentSave(@PathVariable("boardId") Long boardId, @RequestBody CommentSaveDTO commentSaveDTO, Errors errors , Model model , UriComponentsBuilder b) throws Exception {
-//
-//        HttpHeaders headers = new HttpHeaders();
-//        UriComponents uriComponents;
-//        try {
-//            commentService.save(boardId, commentSaveDTO);
-//            /*저장 성공 후 boards 페이지로 리다이렉트*/
-//            uriComponents = b.path("/boards/view").build();
-//            headers.setLocation(uriComponents.toUri());
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
-//        return new ResponseEntity<Void>(headers , HttpStatus.OK);
-//
+//    @PostMapping("/api/comments/{id}")
+//    @ResponseStatus(HttpStatus.CREATED)
+//    public void Save(@PathVariable("boardId")Long boardId, CommentSaveDTO commentSaveDTO){
+//        commentService.save(boardId, commentSaveDTO);
 //    }
+
+
+
+    @PostMapping("/boards/view/{boardId}/comments")//글저장
+    ResponseEntity<?>  commentSave(@PathVariable("boardId") Long boardId, @RequestBody CommentSaveDTO commentSaveDTO, Errors errors , Model model , UriComponentsBuilder b) throws Exception {
+
+        HttpHeaders headers = new HttpHeaders();
+        UriComponents uriComponents;
+        try {
+            commentService.save(boardId, commentSaveDTO);
+            /*저장 성공 후 boards 페이지로 리다이렉트*/
+            uriComponents = b.fromUriString("/boards/view?id="+ boardId).build();
+            headers.setLocation(uriComponents.toUri());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return new ResponseEntity<Void>(headers , HttpStatus.OK);
+
+    }
 
 
     @PostMapping("/api/comments/{boardId}/{commentId}")
