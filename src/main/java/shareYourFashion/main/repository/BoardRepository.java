@@ -9,19 +9,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import shareYourFashion.main.domain.Board;
+import shareYourFashion.main.domain.Comment;
 import shareYourFashion.main.dto.BoardRequestDTO;
-import shareYourFashion.main.dto.BoardSaveRequestDTO;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
-//    List<Board> findAll(String title);
     List<Board> findByTitleOrContent(String title, String content);
     Page<Board> findByTitleContainingOrContentContaining(String title, String content, Pageable Pageable);
-
-//    public Long save(BoardSaveRequestDTO saveDTO);
 
     String UPDATE_BOARD="UPDATE Board "+
             "SET TITLE = :#{#boardRequestDTO.title}, " +
@@ -37,13 +34,10 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
 
 
+
     static final String DELETE_BOARD = "DELETE FROM Board "//게시물삭제
             + "WHERE ID IN (:deleteList)";
 
-//    @Transactional //조회수 증가 일단 보류
-//    @Modifying
-//    @Query(value = UPDATE_BOARD_READ_CNT_INC, nativeQuery = true)
-//    public int updateBoardReadCntInc(@Param("id") Long id);
 
     @Transactional
     @Modifying
@@ -52,9 +46,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
 
 //
-//            static final String UPDATE_BOARD_READ_CNT_INC = "UPDATE view "//조회수증가(이건 사용안함/위에꺼 사용)
-//            +"update Board set view = view + 1 "
-//            +"where Id = :Id";
 
     static final String UPDATE_BOARD_READ_CNT_INC = "UPDATE BOARD " //조회수 숫자 증가
             + "SET VIEW = VIEW + 1 "

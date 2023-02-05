@@ -1,6 +1,9 @@
 package shareYourFashion.main.dto;
 
+import lombok.Builder;
 import lombok.Data;
+import org.springframework.data.domain.Page;
+import shareYourFashion.main.domain.Board;
 import shareYourFashion.main.domain.Comment;
 
 import java.time.LocalDateTime;
@@ -26,6 +29,8 @@ public class CommentInfoDTO {
     private LocalDateTime createdDate;
 
     private LocalDateTime LastModifiedDate;
+
+    private List<Comment> comments;
 
     public CommentInfoDTO(Long commentId, String content, UserInfoDTO writerDto, Long boardId, boolean isRemoved, List<ReCommentInfoDTO> reCommentListDTOList, LocalDateTime createdDate, LocalDateTime lastModifiedDate) {
         this.commentId = commentId;
@@ -62,5 +67,6 @@ public class CommentInfoDTO {
                 .collect(Collectors.toList());
 
     }
+
 
 }

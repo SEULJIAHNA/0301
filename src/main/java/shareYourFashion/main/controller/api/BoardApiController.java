@@ -47,7 +47,7 @@ public class BoardApiController {
         UriComponents uriComponents;
         try {
             Long id = boardService.save(newBoardSaveRequestDTO);
-            /*저장 성공 후 boards 페이지로 리다이렉트*/
+            /*저장 성공 후 boards/view 페이지로 리다이렉트*/
             uriComponents = b.fromUriString("/boards/view?id="+ id).build();
             headers.setLocation(uriComponents.toUri());
         }catch (Exception e){
@@ -62,10 +62,6 @@ public class BoardApiController {
         return boardRepository.findById(id).orElse(null);
     }
 
-//    @PutMapping("/api/board/{id}")//게시글 수정
-//    public Long update(@PathVariable Long id, @RequestBody BoardUpdateDTO updateDTO){
-//        return boardService.update(id, updateDTO);
-//    }
     @PostMapping("/api/board/update")//게시글 수정
     ResponseEntity<?>  update2(@RequestBody BoardUpdateDTO updateDTO, Errors errors , Model model , UriComponentsBuilder b) throws Exception{
 
@@ -73,7 +69,7 @@ public class BoardApiController {
         UriComponents uriComponents;
         try {
             boardService.update(updateDTO.getId(), updateDTO);
-            /*저장 성공 후 boards 페이지로 리다이렉트*/
+            /*저장 성공 후 boards/view 페이지로 리다이렉트*/
             uriComponents = b.fromUriString("/boards/view?id=" + updateDTO.getId()).build();
             headers.setLocation(uriComponents.toUri());
         }catch (Exception e){
@@ -92,7 +88,6 @@ public class BoardApiController {
 
         try {
             boardService.deleteById(id);
-
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("e = " + e);
@@ -104,13 +99,38 @@ public class BoardApiController {
         System.out.println("headers.getLocation() = " + headers.getLocation());
         return new ResponseEntity<>(headers , HttpStatus.MOVED_PERMANENTLY);
     }
-//    @DeleteMapping("/api/board/{id}")//글 삭제
-//    void deleteBoard(@PathVariable Long id){
-//        boardRepository.deleteById(id);
+
+//    @PostMapping("/api/board/delete/{id}") //remove로 구현
+//    public void delete(@PathVariable("id") Long id) {
+//
+//
+//        boardService.remove(id);
+//    }
+    
+    
+    
+    
+    
+    
+//    @ResponseBody
+//    @PostMapping("/api/board/delete/{id}")//글 삭제
+//    public ResponseEntity<?> deleteById(@PathVariable Long id, Errors errors , Model model , UriComponentsBuilder b) throws Exception {
+//        HttpHeaders headers = new HttpHeaders();
+//        UriComponents uriComponents;
+//        try {
+//            boardService.deleteById(id);
+//            /*저장 성공 후 boards 페이지로 리다이렉트*/
+//            uriComponents = b.fromUriString("/boards").build();
+//            headers.setLocation(uriComponents.toUri());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return new ResponseEntity<>(headers , HttpStatus.BAD_REQUEST);
+//        }
+//        return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
 //    }
 
 
 
-}
+    }
 
 

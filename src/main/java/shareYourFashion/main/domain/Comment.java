@@ -3,6 +3,8 @@ package shareYourFashion.main.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.domain.Page;
+import shareYourFashion.main.dto.CommentInfoDTO;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
@@ -18,6 +20,8 @@ import java.util.Optional;
 @Setter
 
 public class Comment extends BaseTimeEntity {
+
+    private final static String DEFAULT_DELETE_MESSAGE = "삭제된 댓글입니다.";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,7 +65,7 @@ public class Comment extends BaseTimeEntity {
     public Comment() {
     }
 
-    ;
+
 
 //= 연관관계 메소드 =//
 //    public void setBoardComment(Board board){
@@ -93,13 +97,15 @@ public class Comment extends BaseTimeEntity {
         this.isRemoved = true;
     }
     @Builder
-    public Comment(String content, User writer, Board board, LookBook lookBook, Comment parent, int cDepth) {
+    public Comment(Long id, String content, User writer, Board board, LookBook lookBook, Comment parent, int cDepth) {
+        this.id=id;
         this.content = content;
         this.writer = writer;
         this.board = board;
         this.lookBook = lookBook;
         this.parent = parent;
         this.cDepth = cDepth;
+
     }
 
     //== 비즈니스 로직 ==//
@@ -136,6 +142,11 @@ public class Comment extends BaseTimeEntity {
                 .orElse(true);//모두 지워졌다면 true를 반환
 
     }
+
+    public void update(boolean isRemoved) {
+        this.isRemoved = isRemoved;
+    }
+
 
 }
 

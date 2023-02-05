@@ -2,28 +2,21 @@ package shareYourFashion.main.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shareYourFashion.main.config.auth.SecurityUtil;
-import shareYourFashion.main.domain.Board;
 import shareYourFashion.main.domain.User;
-import shareYourFashion.main.dto.BoardResponseDTO;
-import shareYourFashion.main.dto.CommentInfoDTO;
-import shareYourFashion.main.dto.ReCommentInfoDTO;
+import shareYourFashion.main.dto.*;
 import shareYourFashion.main.exception.comment.*;
 import shareYourFashion.main.domain.Comment;
-import shareYourFashion.main.dto.CommentSaveDTO;
 import shareYourFashion.main.repository.BoardRepository;
 import shareYourFashion.main.repository.CommentRepository;
 import shareYourFashion.main.repository.UserRepository;
 
 
-import javax.swing.text.html.parser.Entity;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -66,25 +59,35 @@ public class CommentServiceImpl implements CommentService{
 
 
     @Override
-    public void remove(Long id) throws CommentException {
+    @Transactional
+    public void remove(Long id, CommentRemovedDTO commentRemovedDTO) throws CommentException {
         Comment comment = commentRepository.findById(id).orElseThrow(() -> new CommentException(CommentExceptionType.NOT_POUND_COMMENT));
-
-        if(!comment.getWriter().getNickname().equals(SecurityUtil.getLoginNickname())){
+        
+        //로그인시 주석풀기
+       /* if(!comment.getWriter().getNickname().equals(SecurityUtil.getLoginNickname())){
             throw new CommentException(CommentExceptionType.NOT_AUTHORITY_DELETE_COMMENT);
-        }
-
-        comment.remove();
-        List<Comment> removableCommentList = comment.findRemovableList();
-        commentRepository.deleteAll(removableCommentList);
+        }*/ 
+        comment.update(commentRemovedDTO.isRemoved());
+        //List<Comment> removableCommentList = comment.findRemovableList(); //대댓글 리스트 불러오기
+        //commentRepository.deleteAll(removableCommentList); //불러온 대댓글 전체리스트 삭제
     }
 
-//    public CommentInfoDTO findById(Long id) {  //0203리스트 작성하다가 멈춘거
-//        Comment entity = commentRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id=" + id));
-//        ReCommentInfoDTO reCommentInfoDTO = CommentInfoDTO.get;
-//
-//        return new CommentInfoDTO(entity, reCommentInfoDTO);
-//    }
+    @Transactional
+    public void update(Long id, CommentRemovedDTO commentRemovedDTO) throws CommentException {
+        Comment comment = commentRepository.findById(id).orElseThrow(() -> new CommentException(CommentExceptionType.NOT_POUND_COMMENT));
 
+        //로그인시 주석풀기
+       /* if(!comment.getWriter().getNickname().equals(SecurityUtil.getLoginNickname())){
+            throw new CommentException(CommentExceptionType.NOT_AUTHORITY_DELETE_COMMENT);
+        }*/
+        comment.update(commentRemovedDTO.isRemoved());
+        //List<Comment> removableCommentList = comment.findRemovableList(); //대댓글 리스트 불러오기
+        //commentRepository.deleteAll(removableCommentList); //불러온 대댓글 전체리스트 삭제
+    }
+
+    public Page<Comment> findByBoardId(Long boardId, Pageable Pageable){
+        return commentRepository.findByBoardId(boardId, Pageable);
+    }
 //    @Transactional(readOnly = true)
 //    public HashMap< String, Object > findAll(Integer page, Integer size) {
 //

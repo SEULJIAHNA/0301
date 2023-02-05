@@ -20,6 +20,7 @@ import shareYourFashion.main.dto.CommentInfoDTO;
 import shareYourFashion.main.repository.BoardRepository;
 import shareYourFashion.main.repository.CommentRepository;
 import shareYourFashion.main.service.BoardService;
+import shareYourFashion.main.service.CommentService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,6 +36,7 @@ public class BoardController {
     private final BoardRepository boardRepository;
     private final BoardService boardService;
     private final CommentRepository commentRepository;
+    private final CommentService commentService;
 
 
     private static Logger logger = Logger.getLogger(BoardController.class.getName());
@@ -48,7 +50,6 @@ public class BoardController {
     private final String BOARD_UPDATE_PAGE_URL = "/boards/updateForm";
     private final String BOARD_DELETE_PAGE_URL = "/boards/deletePage";
     private final String BOARD_DELETE_ALL_URL = "/boards/deleteAll";
-
     /* return main board pages */
     @GetMapping(value = BOARD_MAIN_URL) //"/boards";
     public String board(Model m, @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
@@ -61,13 +62,11 @@ public class BoardController {
         m.addAttribute("startPage", startPage);
         m.addAttribute("endPage", endPage);
         m.addAttribute("boards", boards);
-//        ModelAndView modelAndView = new ModelAndView();
-//        modelAndView.setViewName("/pc/board/mainBoardPage.html");
 
         return BOARD_MAIN_HTML;
     }
 
-    @GetMapping(value = BOARD_FORM_URL)  // "/boards/form";
+    @GetMapping(value = BOARD_FORM_URL)  // "/boards/form"; 로그인 작성 폼
     public String boardForm(Model m, @RequestParam(required = false) Long id) {
         if (id == null) {
             m.addAttribute("board", new Board());
@@ -79,7 +78,7 @@ public class BoardController {
         return BOARD_FORM_HTML;
     }
 
-    @PostMapping(value = BOARD_FORM_URL) //게시판 글 작성 폼
+    @PostMapping(value = BOARD_FORM_URL) //"/boards/form"; 로그인 작성 폼
     public String pastForm(@Valid Board board, BindingResult bindingResult){
         if(bindingResult.hasErrors()){
             return BOARD_FORM_HTML;
@@ -88,30 +87,44 @@ public class BoardController {
         return BOARD_CONTENT_VIEW_PAGE_URL;//바로 위 if 모델앤뷰와 걸리지 않는지 체크해야함
     }
 
-    @GetMapping(value = BOARD_CONTENT_VIEW_PAGE_URL) //게시글 상세조회 "/boards/view";
+    @GetMapping(value = BOARD_CONTENT_VIEW_PAGE_URL) //"/boards/view"; 게시글 상세조회
     public String getBoardViewPage(Model m, BoardRequestDTO boardRequestDTO, HttpServletRequest request, HttpServletResponse response,
                                     @PageableDefault(page = 0, size = 10, direction = Sort.Direction.DESC) Pageable pageable) throws Exception{
         try {
             if(boardRequestDTO.getId() != null){
 
                 boardService.updateView(boardRequestDTO.getId(), request, response);
-                //BoardResponseDTO board = boardService.findById(boardRequestDTO.getId());
                 BoardResponseDTO board = boardService.getBoardResponseDTO(boardRequestDTO.getId());
-                List<CommentInfoDTO> comments = board.getCommentInfoDtoList();
+//                List<CommentInfoDTO> comments = board.getCommentInfoDtoList();
                 m.addAttribute("board", board);
-                m.addAttribute("comments", comments);
+                //m.addAttribute("comments", comments);
 
-                Page<Comment> commentList = commentRepository.findAll(pageable);
+                //CommentInfoDTO
+                Page<Comment> commentList = commentService.findByBoardId(boardRequestDTO.getId(), pageable);
+
+
+
+
+
+                /* 생성자에 하는법찾아서 넣어야함*/
+                int cnt = commentList.toList().size();
+                for(int i=0 ;i<cnt;i++){
+                    if(commentList.toList().get(i).isRemoved()){
+                        commentList.toList().get(i).setContent("삭제된 댓글입니다");
+                    }
+                }
+                /* 생성자에 하는법찾아서 넣어야함*/
+
                 int startPage = Math.max(1, commentList.getPageable().getPageNumber() - 4);
                 int endPage = Math.min(commentList.getTotalPages(), commentList.getPageable().getPageNumber() + 4);
-//                if (commentList != null && !commentList.isEmpty()){
-//                    m.addAttribute("comment",commentList);
-//                }
-//
-//                m.addAttribute("board",boardService.(id));//0203 아까 서비스때문에 중단
                 m.addAttribute("startPage", startPage);
                 m.addAttribute("endPage", endPage);
-//                m.addAttribute("commentList", commentList);
+                m.addAttribute("comments", commentList);
+
+//                if (commentList != null && !commentList.isEmpty()){
+//                    m.addAttribute("comments",commentList);
+//                }
+
 
             }
         } catch (Exception e) {
@@ -119,41 +132,6 @@ public class BoardController {
         }
 
         return BOARD_CONTENT_VIEW_PAGE_HTML;
-    }
-
-//    @GetMapping(value = BOARD_MAIN_URL)//조회수
-//    public String updateView(@PathVariable("id") Long id, Model m){
-//        Board board = boardRepository.findById(id).get();
-//        int view = board.getView() + 1;
-//
-//        BoardRequestDTO boardRequestDTO = BoardRequestDTO.builder()
-//                .view(view)
-//                .build();
-//
-//        boardService.updateView(board.getId(), boardRequestDTO);
-//
-//        m.addAttribute(board);
-//        return BOARD_CONTENT_VIEW_PAGE_HTML;
-//    }
-
-
-    @PostMapping(value = BOARD_DELETE_PAGE_URL)
-    public String boardDeletePage(Model m, @RequestParam() Long id) throws Exception{
-        try {
-            boardService.deleteById(id);
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
-        return BOARD_MAIN_HTML;
-    }
-    @PostMapping(value = BOARD_DELETE_ALL_URL)
-    public String boardDeleteALL(Model m, @RequestParam() Long[] deleteId) throws Exception{
-        try {
-            boardService.deleteAll(deleteId);
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
-        return BOARD_MAIN_HTML;
     }
 
 

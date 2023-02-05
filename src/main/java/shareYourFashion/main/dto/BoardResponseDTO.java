@@ -23,6 +23,8 @@ public class BoardResponseDTO {
     private Thumbnail thumbnail;
     private LocalDateTime createdDate;
     private LocalDateTime LastModifiedDate;
+    private boolean isRemoved;
+
 
 
     public BoardResponseDTO(Board entity) {
@@ -36,12 +38,15 @@ public class BoardResponseDTO {
         this.thumbnail = entity.getThumbnail();
         this.createdDate = entity.getCreatedDate();
         this.LastModifiedDate = entity.getLastModifiedDate();
+
+        this.isRemoved = entity.isRemoved();
         /**
          * 댓글과 대댓글을 그룹짓기 board.getComments()는 댓글과 대댓글이 모두 조회된다.
          */
 
         Map<Comment, List<Comment>> commentListMap = entity.getComments().stream()
                 .filter(comment -> comment.getParent() != null)
+                //.filter(comment -> comment.isRemoved() == false)
                 .collect(Collectors.groupingBy(Comment::getParent));
 
         /**

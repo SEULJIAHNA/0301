@@ -4,15 +4,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import shareYourFashion.main.config.auth.SecurityUtil;
 import shareYourFashion.main.domain.Board;
-import shareYourFashion.main.dto.BoardRequestDTO;
 import shareYourFashion.main.dto.BoardResponseDTO;
 import shareYourFashion.main.dto.BoardSaveRequestDTO;
 import shareYourFashion.main.dto.BoardUpdateDTO;
-import shareYourFashion.main.exception.comment.BaseException;
+import shareYourFashion.main.dto.CommentInfoDTO;
 import shareYourFashion.main.exception.comment.BoardException;
+import shareYourFashion.main.exception.comment.BoardExceptionType;
+import shareYourFashion.main.exception.comment.CommentException;
+import shareYourFashion.main.exception.comment.CommentExceptionType;
 import shareYourFashion.main.repository.BoardRepository;
 
 import javax.servlet.http.Cookie;
@@ -20,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -95,7 +100,7 @@ public class BoardService {
 
     }
 
-
+    @Transactional
     public void deleteById(Long id) {
         boardRepository.deleteById(id);
     } //한 게시물만 삭제
@@ -137,9 +142,15 @@ public class BoardService {
         return cookie;
     }
 
+    public void remove(Long id) throws CommentException {
+        Board board = boardRepository.findById(id).orElseThrow(() -> new BoardException(BoardExceptionType.BOARD_NOT_POUND));
 
-//    @Transactional
-//    private int likeView
+        if(!board.getAuthor().getNickname().equals(SecurityUtil.getLoginNickname())){
+            throw new BoardException(BoardExceptionType.NOT_AUTHORITY_DELETE_BOARD);
+        }
+
+        board.remove();
+    }
 
 
 

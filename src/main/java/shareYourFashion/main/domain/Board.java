@@ -44,9 +44,12 @@ public class Board extends BaseTimeEntity {
     private List<Like> likes = new ArrayList<>();
 
     // thumbnail (board 조회 할 경우에만 필요 하므로 주인은 board)
-    @OneToOne(fetch = FetchType.LAZY , cascade = CascadeType.ALL , orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY )
     @JoinColumn(name = "thumbnail_id")
     private Thumbnail thumbnail;
+
+    private boolean isRemoved= false;
+
 
     // == ENTity constructor == //
 
@@ -71,7 +74,9 @@ public class Board extends BaseTimeEntity {
         comments.add(comment);
     }
 
-
+    public void remove() {
+        this.isRemoved = true;
+    }
 
     //작성일, 수정일 추가?
 
