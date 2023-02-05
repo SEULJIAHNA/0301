@@ -95,6 +95,7 @@ public class BoardService {
 
     }
 
+
     public void deleteById(Long id) {
         boardRepository.deleteById(id);
     } //한 게시물만 삭제
