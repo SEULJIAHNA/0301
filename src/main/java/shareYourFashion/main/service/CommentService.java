@@ -3,17 +3,10 @@ package shareYourFashion.main.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
-import shareYourFashion.main.domain.Board;
 import shareYourFashion.main.domain.Comment;
-import shareYourFashion.main.dto.BoardResponseDTO;
 import shareYourFashion.main.dto.CommentRemovedDTO;
 import shareYourFashion.main.exception.comment.CommentException;
 import shareYourFashion.main.dto.CommentSaveDTO;
-import shareYourFashion.main.dto.CommentUpdateDTO;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 public interface CommentService {
 

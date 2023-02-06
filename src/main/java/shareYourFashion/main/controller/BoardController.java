@@ -17,6 +17,7 @@ import shareYourFashion.main.domain.Comment;
 import shareYourFashion.main.dto.BoardRequestDTO;
 import shareYourFashion.main.dto.BoardResponseDTO;
 import shareYourFashion.main.dto.CommentInfoDTO;
+import shareYourFashion.main.dto.ReCommentInfoDTO;
 import shareYourFashion.main.repository.BoardRepository;
 import shareYourFashion.main.repository.CommentRepository;
 import shareYourFashion.main.service.BoardService;
@@ -101,9 +102,7 @@ public class BoardController {
 
                 //CommentInfoDTO
                 Page<Comment> commentList = commentService.findByBoardId(boardRequestDTO.getId(), pageable);
-
-
-
+//                List<CommentInfoDTO> reCommentList =
 
 
                 /* 생성자에 하는법찾아서 넣어야함*/

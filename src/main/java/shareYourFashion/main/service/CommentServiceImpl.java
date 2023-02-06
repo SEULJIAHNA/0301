@@ -15,8 +15,10 @@ import shareYourFashion.main.repository.CommentRepository;
 import shareYourFashion.main.repository.UserRepository;
 
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -29,30 +31,46 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public void save(Long boardId, CommentSaveDTO commentSaveDTO) {
-        Comment comment = commentSaveDTO.toEntity();
-//        comment.confirmWriter(userRepository.findByNickname(SecurityUtil.getLoginNickname()).orElseThrow(() -> new UserException(UserExceptionType.NOT_FOUND_USER)));
-        comment.confirmBoard(boardRepository.findById(boardId).orElseThrow(() -> new BoardException(BoardExceptionType.BOARD_NOT_POUND)));
-        comment.confirmParent(comment);
-        // 추후 로그인 적용시 삭제 필수!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        Long aLong = 1L;
-        Optional<User> user = userRepository.findById(aLong);
-        comment.confirmWriter(user.get());
-        commentRepository.save(comment);
-
+        try {
+            Comment comment = commentSaveDTO.toEntity();
+    //        comment.confirmWriter(userRepository.findByNickname(SecurityUtil.getLoginNickname()).orElseThrow(() -> new UserException(UserExceptionType.NOT_FOUND_USER)));
+            comment.confirmBoard(boardRepository.findById(boardId).orElseThrow(() -> new BoardException(BoardExceptionType.BOARD_NOT_POUND)));
+            comment.confirmParent(comment);
+            // 추후 로그인 적용시 삭제 필수!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            Long aLong = 1L;
+            Optional<User> user = userRepository.findById(aLong);
+            comment.confirmWriter(user.get());
+            comment.setIsParent("Y");
+            commentRepository.save(comment);
+        } catch (EntityNotFoundException e) {
+            System.out.println("댓글 저장 실패. 댓글 작성에 필요한 정보를 찾을 수 없습니다 - {}" + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void saveReComment(Long boardId, Long parentId, CommentSaveDTO commentSaveDto) {
-        Comment comment = commentSaveDto.toEntity();
+        try {
+            Comment parent = commentRepository.getReferenceById(parentId);
+            Comment comment = commentSaveDto.toEntity();
 
-        comment.confirmWriter(userRepository.findByNickname(SecurityUtil.getLoginNickname()).orElseThrow(() -> new UserException(UserExceptionType.NOT_FOUND_USER)));
+            comment.confirmWriter(userRepository.findByNickname(SecurityUtil.getLoginNickname()).orElseThrow(() -> new UserException(UserExceptionType.NOT_FOUND_USER)));
 
-        comment.confirmBoard(boardRepository.findById(boardId).orElseThrow(() -> new BoardException(BoardExceptionType.BOARD_NOT_POUND)));
+            comment.confirmBoard(boardRepository.findById(boardId).orElseThrow(() -> new BoardException(BoardExceptionType.BOARD_NOT_POUND)));
 
-        comment.confirmParent(commentRepository.findById(parentId).orElseThrow(() -> new CommentException(CommentExceptionType.NOT_POUND_COMMENT)));
+            comment.confirmParent(commentRepository.findById(parentId).orElseThrow(() -> new CommentException(CommentExceptionType.NOT_POUND_COMMENT)));
 
-        commentRepository.save(comment);
+            commentRepository.save(comment);
 
+            comment.setIsParent("N");
+            comment.setParent(parent);
+            List<Comment> set = parent.getChildren();
+            set.add(comment);
+            parent.setChildren(set);
+        } catch (EntityNotFoundException e) {
+            System.out.println("댓글 저장 실패. 댓글 작성에 필요한 정보를 찾을 수 없습니다 - {}" + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
 

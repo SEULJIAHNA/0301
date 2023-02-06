@@ -55,6 +55,8 @@ public class Comment extends BaseTimeEntity {
 
     private boolean isRemoved= false;
 
+    private String isParent;
+
 
     @OneToMany(mappedBy = "parent", orphanRemoval = true)
     @Builder.Default // 특정 속성에 기본값을 지정
@@ -146,6 +148,8 @@ public class Comment extends BaseTimeEntity {
     public void update(boolean isRemoved) {
         this.isRemoved = isRemoved;
     }
+
+
 
 
 }
