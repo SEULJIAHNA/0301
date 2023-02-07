@@ -5,14 +5,19 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.domain.Page;
 import shareYourFashion.main.dto.CommentInfoDTO;
+import shareYourFashion.main.dto.ReCommentInfoDTO;
+import shareYourFashion.main.dto.UserInfoDTO;
 
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Null;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "comment")
@@ -55,13 +60,14 @@ public class Comment extends BaseTimeEntity {
 
     private boolean isRemoved= false;
 
-    private String isParent;
+
 
 
     @OneToMany(mappedBy = "parent", orphanRemoval = true)
     @Builder.Default // 특정 속성에 기본값을 지정
     private List<Comment> children = new ArrayList<>();
 
+    private String isParent;
 
     //== 생성자 ==//
     public Comment() {
@@ -99,14 +105,23 @@ public class Comment extends BaseTimeEntity {
         this.isRemoved = true;
     }
     @Builder
-    public Comment(Long id, String content, User writer, Board board, LookBook lookBook, Comment parent, int cDepth) {
+    public Comment(Long id, String content, User writer, Board board, LookBook lookBook, Comment parent, boolean isRemoved, int cDepth, String isParent) {
         this.id=id;
         this.content = content;
         this.writer = writer;
         this.board = board;
         this.lookBook = lookBook;
         this.parent = parent;
+        this.isRemoved = isRemoved;
         this.cDepth = cDepth;
+        this.isParent = isParent;
+
+    }
+    public Comment(String content, User writer, Board board, String isParent) {
+        this.content = content;
+        this.writer = writer;
+        this.board = board;
+        this.isParent = isParent;
 
     }
 
@@ -149,7 +164,42 @@ public class Comment extends BaseTimeEntity {
         this.isRemoved = isRemoved;
     }
 
-
+//    public Comment toEntity(Board board, User writer) {
+//        return Comment.of(
+//                board,
+//                writer,
+//                content
+//        );
+//    }
+//
+//    public record CommentDTO(Long id, String content, User writer, Board board, LookBook lookBook, Comment parent, boolean isRemoved, int cDepth, String isParent ) {
+//
+//        public static CommentInfoDTO of(String content, UserInfoDTO writerDto, Long boardId, boolean isRemoved, List<ReCommentInfoDTO> reCommentListDTOList, String isParent) {
+//            return new CommentInfoDTO(null, content, writerDto, boardId, isRemoved, reCommentListDTOList, null, null, isParent);
+//        }
+//
+//        public static CommentInfoDTO of(Long id, String content, UserInfoDTO writerDto, Long boardId, boolean isRemoved, List<ReCommentInfoDTO> reCommentListDTOList, LocalDateTime createdDate, LocalDateTime lastModifiedDate, List<Comment> comments, String isParent) {
+//            return new CommentInfoDTO(id, content, writerDto, boardId, isRemoved, reCommentListDTOList, createdDate, lastModifiedDate, comments, isParent);
+//        }
+//
+//
+//        @Builder
+//        public static CommentDTO from(Comment entity) {
+//            return CommentDTO.builder()
+//                    .id(entity.getId())
+//                    .articleId(entity.getArticle().getId())
+//                    .userAccountDto(UserAccount.UserAccountDto.from(entity.getUserAccount()))
+//                    .content(entity.getContent())
+//                    .createdAt(entity.getCreatedAt())
+//                    .createdBy(entity.getCreatedBy())
+//                    .modifiedAt(entity.getModifiedAt())
+//                    .modifiedBy(entity.getModifiedBy())
+//                    .deleted(entity.getDeleted())
+//                    .children(entity.getChildren() != null ? entity.getChildren().stream().map(ArticleCommentDto::from).collect(Collectors.toSet()) : new HashSet<>())
+//                    .isParent(entity.getParent() == null ? "Y" : "N")
+//                    .build();
+//
+//        }
 
 
 }

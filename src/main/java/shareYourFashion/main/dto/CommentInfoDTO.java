@@ -5,9 +5,14 @@ import lombok.Data;
 import org.springframework.data.domain.Page;
 import shareYourFashion.main.domain.Board;
 import shareYourFashion.main.domain.Comment;
+import shareYourFashion.main.domain.LookBook;
+import shareYourFashion.main.domain.User;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Data
@@ -32,7 +37,9 @@ public class CommentInfoDTO {
 
     private List<Comment> comments;
 
-    public CommentInfoDTO(Long commentId, String content, UserInfoDTO writerDto, Long boardId, boolean isRemoved, List<ReCommentInfoDTO> reCommentListDTOList, LocalDateTime createdDate, LocalDateTime lastModifiedDate) {
+    private String isParent;
+
+    public CommentInfoDTO(Long commentId, String content, UserInfoDTO writerDto, Long boardId, boolean isRemoved, List<ReCommentInfoDTO> reCommentListDTOList, LocalDateTime createdDate, LocalDateTime lastModifiedDate, String isParent) {
         this.commentId = commentId;
         this.content = content;
         this.writerDto = writerDto;
@@ -41,6 +48,7 @@ public class CommentInfoDTO {
         this.reCommentListDTOList = reCommentListDTOList;
         this.createdDate = createdDate;
         LastModifiedDate = lastModifiedDate;
+        this.isParent = isParent;
     }
 
     /**
@@ -58,6 +66,7 @@ public class CommentInfoDTO {
         }
 
         this.isRemoved = comment.isRemoved();
+        this.isParent = comment.getIsParent();
 
 
 
@@ -69,4 +78,5 @@ public class CommentInfoDTO {
     }
 
 
-}
+    }
+

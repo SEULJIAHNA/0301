@@ -12,6 +12,7 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 import shareYourFashion.main.dto.CommentRemovedDTO;
 import shareYourFashion.main.dto.CommentSaveDTO;
+import shareYourFashion.main.dto.UserInfoDTO;
 import shareYourFashion.main.service.CommentService;
 import shareYourFashion.main.utills.ControllerUtill;
 
@@ -50,8 +51,11 @@ public class CommentApiController {
     public ResponseEntity<?> reCommentSave(@PathVariable("boardId") Long boardId,
                               @PathVariable("commentId") Long commentId,
                               CommentSaveDTO commentSaveDTO,
-//나중에 로그인 구현되면 주석풀기  @AuthenticationPrincipal UserInfoDTO.BoardPrincipal principal,
-                              BindingResult bindingResult){
+//                               @AuthenticationPrincipal UserInfoDTO.BoardPrincipal principal,
+                              BindingResult bindingResult,
+                               Errors errors , Model model , UriComponentsBuilder b) throws Exception{
+        HttpHeaders headers = new HttpHeaders();
+        UriComponents uriComponents;
     try{
 
             if (bindingResult.hasErrors()) {
@@ -61,9 +65,11 @@ public class CommentApiController {
 //                return new ResponseEntity<>(ErrorMessages.ACCESS_TOKEN_NOT_FOUND, HttpStatus.BAD_REQUEST);
 //            } //나중에 로그인 구현되면 주석풀기
             commentService.saveReComment(boardId, commentId, commentSaveDTO);
+            uriComponents = b.fromUriString("/boards/view?id="+ boardId).build();
+            headers.setLocation(uriComponents.toUri());
             return new ResponseEntity<>("등록되었습니다.", HttpStatus.OK);
         } catch (EntityNotFoundException e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<Void>(headers , HttpStatus.OK);
         }
     }
 

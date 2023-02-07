@@ -53,8 +53,8 @@ public class CommentServiceImpl implements CommentService{
         try {
             Comment parent = commentRepository.getReferenceById(parentId);
             Comment comment = commentSaveDto.toEntity();
-
-            comment.confirmWriter(userRepository.findByNickname(SecurityUtil.getLoginNickname()).orElseThrow(() -> new UserException(UserExceptionType.NOT_FOUND_USER)));
+//로그인시 주석풀기
+//            comment.confirmWriter(userRepository.findByNickname(SecurityUtil.getLoginNickname()).orElseThrow(() -> new UserException(UserExceptionType.NOT_FOUND_USER)));
 
             comment.confirmBoard(boardRepository.findById(boardId).orElseThrow(() -> new BoardException(BoardExceptionType.BOARD_NOT_POUND)));
 

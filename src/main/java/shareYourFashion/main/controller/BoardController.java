@@ -104,7 +104,6 @@ public class BoardController {
                 Page<Comment> commentList = commentService.findByBoardId(boardRequestDTO.getId(), pageable);
 //                List<CommentInfoDTO> reCommentList =
 
-
                 /* 생성자에 하는법찾아서 넣어야함*/
                 int cnt = commentList.toList().size();
                 for(int i=0 ;i<cnt;i++){

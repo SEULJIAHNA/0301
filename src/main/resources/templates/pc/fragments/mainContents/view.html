@@ -169,14 +169,14 @@
                             <div class="d-flex">
                                 <button id="btn-cmtDelete" class="badge btn-danger" th:onclick="'deleteComment('+${comment.id}+');'">삭제</button>
                             </div>
-                            <!--대댓글 토글 버튼-->
+                            <!--대댓글 쓰기 토글 버튼-->
                             <button type="button"
                                     data-bs-toggle="collapse"
-                                    th:attr="data-bs-target=|#r${commentId}"
+                                    th:attr="data-bs-target=|#r${comment.id}"
                                     style="display:inline" class="btn btn-light">답글쓰기
                             </button>
                                 <!--대댓글 작성폼-->
-                                <div class="collapse" th:id="r + ${commentId}">
+                                <div class="collapse" th:id="r + ${comment.id}">
                                     <ul class="list-group list-group-flush"><!--ul로 묶어서 토글버튼 나눔-->
                                         <li class="list-group-item">
                                         <form id="frm3" method="post" th:action="@{|/api/comments/${board.id}/${commentId}|}" th:object="${commentSaveDTO}">
@@ -184,7 +184,7 @@
                                                 <label for="reComment1" class="form-label mt-4" hidden>댓글 작성</label>
 
                                                 <input type="text"  th:name="content" class="form-control" id="reComment1" name="reComment1">
-                                                <input type="hidden" th:name="parentId" th:value="${commentId}"/>
+                                                <input type="hidden" th:name="parentId" th:value="${comment.id}"/>
     <!--                                            <button type="submit" class="btn btn-outline-dark">답글작성</button>-->
                                                 <div class="d-flex">
                                                 <input type="button" id="btn-reComment-save" value="답글달기" class="btn btn-dark mt-3">
@@ -194,14 +194,14 @@
                                         </li>
                                     </ul>
                                 </div>
-                                <!--대댓글 리스트-->
+                                <!--대댓글 리스트 영역-->
                                 <!--대댓글 내용-->
                                 <button type="button"
                                         data-bs-toggle="collapse"
-                                        th:attr="data-bs-target=|#re${commentId}"
+                                        th:attr="data-bs-target=|#re${comment.id}"
                                         style="display:inline" class="btn btn-light">답글보기
                                 </button>
-                                <div class="collapse" th:id="re + ${commentId}">
+                                <div class="collapse" th:id="re + ${comment.id}">
                                 <ul id="reReply--box" class="list-group" th:each="reComment : ${comment.children}">
                                 <div class="children" th:if="${reComment.isRemoved != '1' }">
                                     &nbsp;
@@ -229,6 +229,7 @@
 
     <!--                       //쓸모없음 <button id=".reCommentBtn" type="button" class="btn btn-outline-secondary">답글</button>-->
                             </ul>
+                                </div>
                     </td>
                 </ul>
             </div>
@@ -273,7 +274,7 @@
             <!--                    </div>-->
             <!--                </section>-->
 <!--                        </div>-->
-            </div>
+    </div>
 
 
     <!--    <script th:inline="javascript">-->
