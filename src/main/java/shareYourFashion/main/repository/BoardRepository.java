@@ -64,6 +64,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @EntityGraph(attributePaths = {"author"})
     Optional<Board> findWithAuthorById(Long id);
 
-    Long save(BoardSaveRequestDTO saveDTO, BoardImageDTO boardImageDTO);
+//    Long save(BoardSaveRequestDTO saveDTO, BoardImageDTO boardImageDTO);
 
 }

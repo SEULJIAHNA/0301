@@ -48,69 +48,77 @@ public class BoardService {
 
 
     @Transactional
-    public Long save(BoardSaveRequestDTO boardSaveDTO, @RequestParam Map<String  , Object> paramMap , MultipartHttpServletRequest multipartRequest)throws IOException, DoNotFoundImageObjectException {
-
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        System.out.println("authentication = " + authentication);
-
-        MultipartFile file;
-
-        try {
-            // 전달 받은 blob image data를 multipartFile type 으로 전환
-            file = multipartRequest.getFile("blob");
-
-            // blob image 가 null 인 경우 예외 발생 시킨다.
-            if(file.isEmpty()) {
-                throw new DoNotFoundImageObjectException(" do not found blob image multipartFile Object (byte size : 0)");
-            }
-        } catch(Exception e) {
-            throw e;
-        }
-
-
-        String imageType = (String) paramMap.get("imageType");
-
-        // 외부 루트(image upload folder)에 저장된 image 내용을 담은 image 객체 생성한다.
-        Image image = fileUtils.saveImage(file, imageType);
-
-        // db에 전달할 Image entity 생성(정보는 내부에 저장 , 실제 데이터는 외부 루트에 저장)
-        Optional<Object> imageEntity = Optional.empty();
-        System.out.println("imageEntity = " + imageEntity);
-        // 유저와 이미지 관계 매핑
-//        PrincipalDetails userDetails = (PrincipalDetails)authentication.getPrincipal();
-        // 이미지 등록 요청한 유저 entity 찾아오기
-
-//        User principal = userService.findByEmail(userDetails.getEmail());
-//        System.out.println("principal = " + principal);
-
-        if(image.getImageType().equals(ImageType.USER_PROFILE_IMAGE)) {
-            Object img = imageEntity.orElse(fileService.createUserProfileEntity(image));
-            System.out.println("img = " + img);
-
-            // 유저와 이미지 연관관계 매핑
-//            principal.userToProfileImage((UserProfileImage) img);
-        }
-        else if(image.getImageType().equals(ImageType.USER_BACKGROUND_PROFILE_IMAGE)) {
-            Object img = imageEntity.orElse(fileService.createBackgroundProfileImageEntity(image));
-
-            // 유저와 이미지 연관관계 매핑
-//            principal.userToBDProfileImage( (BackgroundProfileImage) img);
-        }
-        else {
-            throw new DoNotFoundImageObjectException("image Entity is null");
-        }
-
-        BoardImage boardImage = image;
-
-        return boardRepository.save(boardSaveDTO.toEntity(), boardImage).getId());
+    public Long save(BoardSaveRequestDTO boardSaveDTO) {
+        return boardRepository.save(boardSaveDTO.toEntity()).getId();
     }
 
 
 
+//    @Transactional
+//    public Long save(BoardSaveRequestDTO boardSaveDTO, @RequestParam Map<String  , Object> paramMap , MultipartHttpServletRequest multipartRequest)throws IOException, DoNotFoundImageObjectException {
+//
+//
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//
+//        System.out.println("authentication = " + authentication);
+//
+//        MultipartFile file;
+//
+//        try {
+//            // 전달 받은 blob image data를 multipartFile type 으로 전환
+//            file = multipartRequest.getFile("blob");
+//
+//            // blob image 가 null 인 경우 예외 발생 시킨다.
+//            if(file.isEmpty()) {
+//                throw new DoNotFoundImageObjectException(" do not found blob image multipartFile Object (byte size : 0)");
+//            }
+//        } catch(Exception e) {
+//            throw e;
+//        }
+//
+//
+//        String imageType = (String) paramMap.get("imageType");
+//
+//        // 외부 루트(image upload folder)에 저장된 image 내용을 담은 image 객체 생성한다.
+//        Image image = fileUtils.saveImage(file, imageType);
+//
+//        // db에 전달할 Image entity 생성(정보는 내부에 저장 , 실제 데이터는 외부 루트에 저장)
+//        Optional<Object> imageEntity = Optional.empty();
+//        System.out.println("imageEntity = " + imageEntity);
+//        // 유저와 이미지 관계 매핑
+////        PrincipalDetails userDetails = (PrincipalDetails)authentication.getPrincipal();
+//        // 이미지 등록 요청한 유저 entity 찾아오기
+//
+////        User principal = userService.findByEmail(userDetails.getEmail());
+////        System.out.println("principal = " + principal);
+//
+//        if(image.getImageType().equals(ImageType.USER_PROFILE_IMAGE)) {
+//            Object img = imageEntity.orElse(fileService.createUserProfileEntity(image));
+//            System.out.println("img = " + img);
+//
+//            // 유저와 이미지 연관관계 매핑
+////            principal.userToProfileImage((UserProfileImage) img);
+//        }
+//        else if(image.getImageType().equals(ImageType.USER_BACKGROUND_PROFILE_IMAGE)) {
+//            Object img = imageEntity.orElse(fileService.createBackgroundProfileImageEntity(image));
+//
+//            // 유저와 이미지 연관관계 매핑
+////            principal.userToBDProfileImage( (BackgroundProfileImage) img);
+//        }
+//        else {
+//            throw new DoNotFoundImageObjectException("image Entity is null");
+//        }
+//
+//        BoardImage boardImage = image;
+//
+//        return boardRepository.save(boardSaveDTO.toEntity(), boardImage).getId());
+//    }
 
 
+    @Transactional
+    public Board findById2(Long id) {
+        return boardRepository.findById(id).get();
+    }
 
     @Transactional
     public Long update(Long id, BoardUpdateDTO updateDTO){

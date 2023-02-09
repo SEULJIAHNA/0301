@@ -49,24 +49,35 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public void saveReComment(Long boardId, Long parentId, CommentSaveDTO commentSaveDto) {
+    public void saveReComment(Long boardId, Long parentId, CommentSaveDTO commentSaveDto ) {
         try {
+
+
             Comment parent = commentRepository.getReferenceById(parentId);
+            commentSaveDto.setParent(parent);
             Comment comment = commentSaveDto.toEntity();
+
+            System.out.println("comment = " + comment.toString());
 //로그인시 주석풀기
+
+            Long aLong = 1L;
+            Optional<User> user = userRepository.findById(aLong);
+            comment.confirmWriter(user.get());
 //            comment.confirmWriter(userRepository.findByNickname(SecurityUtil.getLoginNickname()).orElseThrow(() -> new UserException(UserExceptionType.NOT_FOUND_USER)));
 
             comment.confirmBoard(boardRepository.findById(boardId).orElseThrow(() -> new BoardException(BoardExceptionType.BOARD_NOT_POUND)));
 
             comment.confirmParent(commentRepository.findById(parentId).orElseThrow(() -> new CommentException(CommentExceptionType.NOT_POUND_COMMENT)));
 
-            commentRepository.save(comment);
-
             comment.setIsParent("N");
             comment.setParent(parent);
             List<Comment> set = parent.getChildren();
             set.add(comment);
             parent.setChildren(set);
+
+            commentRepository.save(comment);
+            System.out.println("comment = " + comment);
+
         } catch (EntityNotFoundException e) {
             System.out.println("댓글 저장 실패. 댓글 작성에 필요한 정보를 찾을 수 없습니다 - {}" + e.getMessage());
             e.printStackTrace();
@@ -80,7 +91,7 @@ public class CommentServiceImpl implements CommentService{
     @Transactional
     public void remove(Long id, CommentRemovedDTO commentRemovedDTO) throws CommentException {
         Comment comment = commentRepository.findById(id).orElseThrow(() -> new CommentException(CommentExceptionType.NOT_POUND_COMMENT));
-        
+
         //로그인시 주석풀기
        /* if(!comment.getWriter().getNickname().equals(SecurityUtil.getLoginNickname())){
             throw new CommentException(CommentExceptionType.NOT_AUTHORITY_DELETE_COMMENT);

@@ -5,9 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
+import shareYourFashion.main.constant.ImageType;
 import shareYourFashion.main.domain.valueTypeClass.Image;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 
 @Entity
 @Data
@@ -29,4 +31,16 @@ public class BoardImage extends BaseTimeEntity{
     @Column(nullable = false)
     @Embedded
     private Image image;
+
+    @NotEmpty
+    private String fileName;
+
+    @NotEmpty
+    private String fileOriginName;
+
+    @NotEmpty
+    private String storedFilePath;
+
+    @NotEmpty
+    private ImageType imageType;
 }

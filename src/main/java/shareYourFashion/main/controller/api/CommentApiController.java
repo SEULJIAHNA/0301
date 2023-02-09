@@ -1,6 +1,7 @@
 package shareYourFashion.main.controller.api;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,10 +11,14 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
+import shareYourFashion.main.domain.Board;
+import shareYourFashion.main.domain.User;
 import shareYourFashion.main.dto.CommentRemovedDTO;
 import shareYourFashion.main.dto.CommentSaveDTO;
 import shareYourFashion.main.dto.UserInfoDTO;
+import shareYourFashion.main.service.BoardService;
 import shareYourFashion.main.service.CommentService;
+import shareYourFashion.main.service.UserService;
 import shareYourFashion.main.utills.ControllerUtill;
 
 import javax.persistence.EntityNotFoundException;
@@ -24,6 +29,12 @@ import java.net.URI;
 public class CommentApiController {
 
     private final CommentService commentService;
+
+    @Autowired
+    private final UserService userService;
+
+    @Autowired
+    private final BoardService boardService;
 
 
 
@@ -54,6 +65,20 @@ public class CommentApiController {
 //                               @AuthenticationPrincipal UserInfoDTO.BoardPrincipal principal,
                               BindingResult bindingResult,
                                Errors errors , Model model , UriComponentsBuilder b) throws Exception{
+
+        // 임시 필드 생성
+        User user = userService.findById(1L);
+        Board board = boardService.findById2(boardId);
+
+
+        System.out.println("user.toString() = " + user.toString());
+
+        System.out.println("commentSaveDTO = " + commentSaveDTO);
+
+        // 임시 commentSaveDTO 생성
+        commentSaveDTO.setBoard(board);
+        commentSaveDTO.setWriter(user);
+
         HttpHeaders headers = new HttpHeaders();
         UriComponents uriComponents;
     try{
