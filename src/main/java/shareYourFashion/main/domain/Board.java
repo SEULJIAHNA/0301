@@ -1,10 +1,12 @@
 package shareYourFashion.main.domain;
 
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "board")
@@ -44,12 +46,18 @@ public class Board extends BaseTimeEntity {
     @OneToMany(mappedBy = "board" ,cascade = CascadeType.ALL , orphanRemoval = true)
     private List<Like> likes = new ArrayList<>();
 
+    @OneToMany(mappedBy = "board" , cascade = CascadeType.ALL , orphanRemoval = true)
+    private List<BoardImage> Images = new ArrayList<>();
+
     // thumbnail (board 조회 할 경우에만 필요 하므로 주인은 board)
     @OneToOne(fetch = FetchType.LAZY )
     @JoinColumn(name = "thumbnail_id")
     private Thumbnail thumbnail;
 
     private boolean isRemoved= false;
+
+
+
 
 
     // == ENTity constructor == //

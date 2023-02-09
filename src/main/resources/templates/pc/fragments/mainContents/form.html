@@ -4,13 +4,13 @@
 <th:block th:fragment="form">
     <script th:inline="javascript">
 
-        $(document).ready(function() {
-              $('#content').summernote({
-              placeholder: '내용',
-              tabsize: 2,
-              height: 500
-            });
-          });
+<!--        $(document).ready(function() {-->
+<!--              $('#content').summernote({-->
+<!--              placeholder: '내용',-->
+<!--              tabsize: 2,-->
+<!--              height: 500-->
+<!--            });-->
+<!--          });-->
         function save(){
             var id= $('input[name=id]').val();
             var formDataObject = $("#form1").serializeObject();
@@ -24,45 +24,65 @@
             commonAjax(urlName, formDataObject, method);
         }
 
-       $('.summernote').summernote({
-	height : 500,
-	lang: "ko-KR",
-	minHeight : null,
-	maxHeight : null,
-	focus : true,
-	callbacks : {
-		onImageUpload : function(files, editor, welEditable) {
-			for (var i = 0; i < files.length; i++) {
-				sendFile(files[i], this);
-			}
-		}
-	}
-});
+<!--       $('.summernote').summernote({-->
+<!--	height : 500,-->
+<!--	lang: "ko-KR",-->
+<!--	minHeight : null,-->
+<!--	maxHeight : null,-->
+<!--	focus : true,-->
+<!--	callbacks : {-->
+<!--		onImageUpload : function(files, editor, welEditable) {-->
+<!--			for (var i = 0; i < files.length; i++) {-->
+<!--				sendFile(files[i], this);-->
+<!--			}-->
+<!--		}-->
+<!--	}-->
+<!--});-->
 
-function sendFile(file, editor) {
-	var form_data = new FormData();
-	form_data.append('file', file);
-	$.ajax({
-		data : form_data,
-		type : "POST",
-		url : '/resources/summerimages',
-		cache : false,
-		contentType : false,
-		enctype : 'multipart/form-data',
-		processData : false,
-		success : function(url) {
-			$(editor).summernote('insertImage', url, function($image) {
-				$image.css('width', "25%");
-			});
-		}
-	});
-}
+<!--function sendFile(file, editor) {-->
+<!--	var form_data = new FormData();-->
+<!--	form_data.append('file', file);-->
+<!--	$.ajax({-->
+<!--		data : form_data,-->
+<!--		type : "POST",-->
+<!--		url : '/resources/summerimages',-->
+<!--		cache : false,-->
+<!--		contentType : false,-->
+<!--		enctype : 'multipart/form-data',-->
+<!--		processData : false,-->
+<!--		success : function(url) {-->
+<!--			$(editor).summernote('insertImage', url, function($image) {-->
+<!--				$image.css('width', "25%");-->
+<!--			});-->
+<!--		}-->
+<!--	});-->
+<!--}-->
+
+    $(document).ready(function() {
+        $("a[name='file-delete']").on("click", function(e) {
+            e.preventDefault();
+            deleteFile($(this));
+        });
+    })
+
+    function addFile() {
+        var str = "<div class='file-group'><input type='file' name='file'><a href='#this' name='file-delete'>삭제</a></div>";
+        $("#file-list").append(str);
+        $("a[name='file-delete']").on("click", function(e) {
+            e.preventDefault();
+            deleteFile($(this));
+        });
+    }
+
+    function deleteFile(obj) {
+        obj.parent().remove();
+    }
 
 
     </script>
     <div class="container">
         <form id="form1" name="form1" class="validation-form" th:action="@{/api/board}" action="#" role="form"
-              th:object="${board}"
+              th:object="${board}" enctype="multipart/form-data"
               method="post" novalidate>
 
             <input type="hidden" name="id" th:value="${board.id}">
@@ -75,7 +95,13 @@ function sendFile(file, editor) {
                 <label for="content">Content:</label>
                 <textarea class="form-control" th:field="*{content}" rows="5" id="content" name="content"></textarea>
             </div>
-            <div class="right-box">
+            <div class="form-group" id="file-list">
+                <a href="#this" onclick="addFile()">파일추가</a>
+                <div class="file-group">
+                    <input type="file" name="file"><a href='#this' name='file-delete'>삭제</a>
+                </div>
+            </div>
+        <div class="right-box">
                 <input type="button" value="등록하기" class="btn btn-primary" onclick="save(); return false;">
                 <input type="button" value="목록으로" class="btn btn-primary" onclick="javascript:location.href='/boards'">
             </div>

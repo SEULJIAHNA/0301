@@ -8,14 +8,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.thymeleaf.util.StringUtils;
 import shareYourFashion.main.domain.Board;
+import shareYourFashion.main.domain.BoardImage;
+import shareYourFashion.main.domain.valueTypeClass.Image;
 import shareYourFashion.main.dto.BoardSaveRequestDTO;
 import shareYourFashion.main.dto.BoardUpdateDTO;
 import shareYourFashion.main.repository.BoardRepository;
 import shareYourFashion.main.service.BoardService;
+import shareYourFashion.main.service.FileUtils;
 
 import java.net.URI;
 import java.util.List;
@@ -27,6 +31,8 @@ public class BoardApiController {
 
     private final BoardRepository boardRepository;
     private final BoardService boardService;
+
+    private final FileUtils fileUtils;
 
 
     @GetMapping("/api/board")
@@ -41,12 +47,13 @@ public class BoardApiController {
     }
 
     @PostMapping("/api/board")//글저장
-    ResponseEntity<?>  newBoardSave(@RequestBody BoardSaveRequestDTO newBoardSaveRequestDTO, Errors errors , Model model , UriComponentsBuilder b) throws Exception {
+    ResponseEntity<?>  newBoardSave(@RequestBody BoardSaveRequestDTO newBoardSaveRequestDTO, MultipartFile boardImage , String type, Errors errors , Model model , UriComponentsBuilder b) throws Exception {
 
         HttpHeaders headers = new HttpHeaders();
         UriComponents uriComponents;
         try {
-            Long id = boardService.save(newBoardSaveRequestDTO);
+            Image file = fileUtils.saveImage(boardImage, type);
+            Long id = boardService.save(newBoardSaveRequestDTO, file);
             /*저장 성공 후 boards/view 페이지로 리다이렉트*/
             uriComponents = b.fromUriString("/boards/view?id="+ id).build();
             headers.setLocation(uriComponents.toUri());

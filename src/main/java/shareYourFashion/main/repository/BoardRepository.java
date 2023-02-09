@@ -8,11 +8,17 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import shareYourFashion.main.domain.Board;
+import shareYourFashion.main.domain.BoardImage;
 import shareYourFashion.main.domain.Comment;
+import shareYourFashion.main.dto.BoardImageDTO;
 import shareYourFashion.main.dto.BoardRequestDTO;
+import shareYourFashion.main.dto.BoardSaveRequestDTO;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface BoardRepository extends JpaRepository<Board, Long> {
@@ -57,5 +63,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     @EntityGraph(attributePaths = {"author"})
     Optional<Board> findWithAuthorById(Long id);
+
+    Long save(BoardSaveRequestDTO saveDTO, BoardImageDTO boardImageDTO);
 
 }

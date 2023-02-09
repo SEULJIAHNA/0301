@@ -4,26 +4,35 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import shareYourFashion.main.config.auth.SecurityUtil;
+import shareYourFashion.main.constant.ImageType;
 import shareYourFashion.main.domain.Board;
+import shareYourFashion.main.domain.BoardImage;
+import shareYourFashion.main.domain.valueTypeClass.Image;
 import shareYourFashion.main.dto.BoardResponseDTO;
 import shareYourFashion.main.dto.BoardSaveRequestDTO;
 import shareYourFashion.main.dto.BoardUpdateDTO;
-import shareYourFashion.main.dto.CommentInfoDTO;
+import shareYourFashion.main.exception.DoNotFoundImageObjectException;
 import shareYourFashion.main.exception.comment.BoardException;
 import shareYourFashion.main.exception.comment.BoardExceptionType;
 import shareYourFashion.main.exception.comment.CommentException;
-import shareYourFashion.main.exception.comment.CommentExceptionType;
 import shareYourFashion.main.repository.BoardRepository;
+import shareYourFashion.main.repository.UserRepository;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -32,17 +41,85 @@ import java.util.stream.Collectors;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final FileUtils fileUtils;
+    private final FileService fileService;
     private final static String VIEWCOOKIENAME = "alreadyViewCookie";
+    private final UserRepository userRepository;
+
 
     @Transactional
-    public Long save(BoardSaveRequestDTO boardSaveDTO) {
-        return boardRepository.save(boardSaveDTO.toEntity()).getId();
+    public Long save(BoardSaveRequestDTO boardSaveDTO, @RequestParam Map<String  , Object> paramMap , MultipartHttpServletRequest multipartRequest)throws IOException, DoNotFoundImageObjectException {
+
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        System.out.println("authentication = " + authentication);
+
+        MultipartFile file;
+
+        try {
+            // 전달 받은 blob image data를 multipartFile type 으로 전환
+            file = multipartRequest.getFile("blob");
+
+            // blob image 가 null 인 경우 예외 발생 시킨다.
+            if(file.isEmpty()) {
+                throw new DoNotFoundImageObjectException(" do not found blob image multipartFile Object (byte size : 0)");
+            }
+        } catch(Exception e) {
+            throw e;
+        }
+
+
+        String imageType = (String) paramMap.get("imageType");
+
+        // 외부 루트(image upload folder)에 저장된 image 내용을 담은 image 객체 생성한다.
+        Image image = fileUtils.saveImage(file, imageType);
+
+        // db에 전달할 Image entity 생성(정보는 내부에 저장 , 실제 데이터는 외부 루트에 저장)
+        Optional<Object> imageEntity = Optional.empty();
+        System.out.println("imageEntity = " + imageEntity);
+        // 유저와 이미지 관계 매핑
+//        PrincipalDetails userDetails = (PrincipalDetails)authentication.getPrincipal();
+        // 이미지 등록 요청한 유저 entity 찾아오기
+
+//        User principal = userService.findByEmail(userDetails.getEmail());
+//        System.out.println("principal = " + principal);
+
+        if(image.getImageType().equals(ImageType.USER_PROFILE_IMAGE)) {
+            Object img = imageEntity.orElse(fileService.createUserProfileEntity(image));
+            System.out.println("img = " + img);
+
+            // 유저와 이미지 연관관계 매핑
+//            principal.userToProfileImage((UserProfileImage) img);
+        }
+        else if(image.getImageType().equals(ImageType.USER_BACKGROUND_PROFILE_IMAGE)) {
+            Object img = imageEntity.orElse(fileService.createBackgroundProfileImageEntity(image));
+
+            // 유저와 이미지 연관관계 매핑
+//            principal.userToBDProfileImage( (BackgroundProfileImage) img);
+        }
+        else {
+            throw new DoNotFoundImageObjectException("image Entity is null");
+        }
+
+        BoardImage boardImage = image;
+
+        return boardRepository.save(boardSaveDTO.toEntity(), boardImage).getId());
     }
+
+
+
+
+
 
     @Transactional
     public Long update(Long id, BoardUpdateDTO updateDTO){
         Board board = boardRepository.findById(id).orElseThrow(()-> new IllegalStateException("게시글이 없습니다. id="+id));
         board.update(updateDTO.getTitle(), updateDTO.getContent());
+
+//        fileService.saveFile(updateDTO);
+//
+//        return board.getId();
         return  id;
     }
 
@@ -151,6 +228,7 @@ public class BoardService {
 
         board.remove();
     }
+
 
 
 
