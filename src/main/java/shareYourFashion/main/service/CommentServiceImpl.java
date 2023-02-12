@@ -35,7 +35,7 @@ public class CommentServiceImpl implements CommentService{
             Comment comment = commentSaveDTO.toEntity();
     //        comment.confirmWriter(userRepository.findByNickname(SecurityUtil.getLoginNickname()).orElseThrow(() -> new UserException(UserExceptionType.NOT_FOUND_USER)));
             comment.confirmBoard(boardRepository.findById(boardId).orElseThrow(() -> new BoardException(BoardExceptionType.BOARD_NOT_POUND)));
-            comment.confirmParent(comment);
+//            comment.confirmParent(comment);
             // 추후 로그인 적용시 삭제 필수!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             Long aLong = 1L;
             Optional<User> user = userRepository.findById(aLong);
@@ -68,9 +68,10 @@ public class CommentServiceImpl implements CommentService{
             comment.confirmBoard(boardRepository.findById(boardId).orElseThrow(() -> new BoardException(BoardExceptionType.BOARD_NOT_POUND)));
 
             comment.confirmParent(commentRepository.findById(parentId).orElseThrow(() -> new CommentException(CommentExceptionType.NOT_POUND_COMMENT)));
-
+            comment.confirmParent(parent);
             comment.setIsParent("N");
             comment.setParent(parent);
+
             List<Comment> set = parent.getChildren();
             set.add(comment);
             parent.setChildren(set);

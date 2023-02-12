@@ -46,8 +46,8 @@ public class Board extends BaseTimeEntity {
     @OneToMany(mappedBy = "board" ,cascade = CascadeType.ALL , orphanRemoval = true)
     private List<Like> likes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "board" , cascade = CascadeType.ALL , orphanRemoval = true)
-    private List<BoardImage> Images = new ArrayList<>();
+//    @OneToMany(mappedBy = "board" , cascade = CascadeType.ALL , orphanRemoval = true)
+//    private List<BoardImage> Images = new ArrayList<>();
 
     // thumbnail (board 조회 할 경우에만 필요 하므로 주인은 board)
     @OneToOne(fetch = FetchType.LAZY )

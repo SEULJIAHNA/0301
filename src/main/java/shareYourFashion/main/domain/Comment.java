@@ -58,6 +58,7 @@ public class Comment extends BaseTimeEntity {
     @Min(0)
     private int cDepth;
 
+    @JoinColumn(name = "isRemoved")
     private boolean isRemoved= false;
 
 
@@ -67,6 +68,7 @@ public class Comment extends BaseTimeEntity {
     @Builder.Default // 특정 속성에 기본값을 지정
     private List<Comment> children = new ArrayList<>();
 
+    @JoinColumn(name = "isParent")
     private String isParent;
 
     //== 생성자 ==//

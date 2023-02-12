@@ -1,7 +1,7 @@
 package shareYourFashion.main.service;
 
 import shareYourFashion.main.domain.BackgroundProfileImage;
-import shareYourFashion.main.domain.BoardImage;
+//import shareYourFashion.main.domain.BoardImage;
 import shareYourFashion.main.domain.UserProfileImage;
 import shareYourFashion.main.domain.valueTypeClass.Image;
 
@@ -18,9 +18,9 @@ public interface BoardImageService {
 
     BackgroundProfileImage findBackgroundImageByFileName(String fileName);
 
-    UserProfileImage createUserProfileEntity(BoardImage image);
+//    UserProfileImage createUserProfileEntity(BoardImage image);
 
-    BackgroundProfileImage createBackgroundProfileImageEntity(BoardImage image);
+//    BackgroundProfileImage createBackgroundProfileImageEntity(BoardImage image);
 
     String findProfileImageURL(UserProfileImage profileImage);
 

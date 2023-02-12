@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import shareYourFashion.main.constant.ImageType;
 import shareYourFashion.main.domain.Board;
-import shareYourFashion.main.domain.BoardImage;
+//import shareYourFashion.main.domain.BoardImage;
 import shareYourFashion.main.domain.valueTypeClass.Image;
 
 import javax.persistence.*;

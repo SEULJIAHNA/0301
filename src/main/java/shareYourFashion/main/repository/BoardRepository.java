@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import shareYourFashion.main.domain.Board;
-import shareYourFashion.main.domain.BoardImage;
+//import shareYourFashion.main.domain.BoardImage;
 import shareYourFashion.main.domain.Comment;
 import shareYourFashion.main.dto.BoardImageDTO;
 import shareYourFashion.main.dto.BoardRequestDTO;

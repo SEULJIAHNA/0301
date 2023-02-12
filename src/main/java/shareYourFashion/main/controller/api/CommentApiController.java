@@ -61,7 +61,7 @@ public class CommentApiController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> reCommentSave(@PathVariable("boardId") Long boardId,
                               @PathVariable("commentId") Long commentId,
-                              CommentSaveDTO commentSaveDTO,
+                              @RequestBody CommentSaveDTO commentSaveDTO,
 //                               @AuthenticationPrincipal UserInfoDTO.BoardPrincipal principal,
                               BindingResult bindingResult,
                                Errors errors , Model model , UriComponentsBuilder b) throws Exception{
@@ -92,7 +92,8 @@ public class CommentApiController {
             commentService.saveReComment(boardId, commentId, commentSaveDTO);
             uriComponents = b.fromUriString("/boards/view?id="+ boardId).build();
             headers.setLocation(uriComponents.toUri());
-            return new ResponseEntity<>("등록되었습니다.", HttpStatus.OK);
+            //return new ResponseEntity<>("등록되었습니다.", HttpStatus.OK);
+            return new ResponseEntity<>(headers, HttpStatus.OK);
         } catch (EntityNotFoundException e){
             return new ResponseEntity<Void>(headers , HttpStatus.OK);
         }
