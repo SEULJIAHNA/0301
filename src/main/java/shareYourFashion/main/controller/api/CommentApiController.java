@@ -99,8 +99,9 @@ public class CommentApiController {
         }
     }
 
-    @PostMapping("/api/commentDelete/{commentId}")
-    public ResponseEntity<?> delete(@PathVariable("commentId") Long commentId , Model model, UriComponentsBuilder b) throws Exception {
+    @PostMapping("/api/commentDelete/{boardId}/{commentId}")
+    public ResponseEntity<?> delete(@PathVariable("boardId") Long boardId,
+                                    @PathVariable("commentId") Long commentId , Model model, UriComponentsBuilder b) throws Exception {
 //, @RequestBody CommentRemovedDTO commentRemovedDTO
         HttpHeaders headers = new HttpHeaders();
         UriComponents uriComponents;
@@ -108,9 +109,9 @@ public class CommentApiController {
             CommentRemovedDTO commentRemovedDTO = new CommentRemovedDTO(commentId,true);
             commentService.update(commentId,commentRemovedDTO);
             /*저장 성공 후 boards 페이지로 리다이렉트*/
-            // uriComponents = b.fromUriString("/boards/view?id="+ boardId).build();
-            //headers.setLocation(uriComponents.toUri());
-            headers.setLocation(URI.create("/"));
+             uriComponents = b.fromUriString("/boards/view?id="+ boardId).build();
+            headers.setLocation(uriComponents.toUri());
+//            headers.setLocation(URI.create("/"));
         }catch (Exception e){
             e.printStackTrace();
         }

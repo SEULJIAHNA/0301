@@ -29,7 +29,7 @@
         <!--댓글삭제-->
         function deleteComment(commentId){
             var id= $('input[name=id]').val();
-            var urlName = "/api/commentDelete/"+commentId;
+            var urlName = "/api/commentDelete/"+id+"/"+commentId;
             var formDataObject = $("#frm2").serializeObject();
             var method = "POST";
             commonAjax(urlName, formDataObject, method);
@@ -169,7 +169,7 @@
                             </div>
                     </th:block>
                             <!--대댓글 쓰기 토글 버튼-->
-                    <th:block th:if="${comment.parent == null && comment.isRemoved == 0}">
+                    <th:block th:if="${comment.parent == null  && comment.isRemoved == false}">
                             <button type="button"
                                     data-bs-toggle="collapse"
                                     th:attr="data-bs-target=|#r${comment.id}"
