@@ -111,6 +111,7 @@ public class BoardController {
                         commentList.toList().get(i).setContent("삭제된 댓글입니다");
                     }
                 }
+
                 /* 생성자에 하는법찾아서 넣어야함*/
 
                 int startPage = Math.max(1, commentList.getPageable().getPageNumber() - 4);

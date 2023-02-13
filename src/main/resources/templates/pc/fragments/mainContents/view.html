@@ -28,12 +28,17 @@
 
         <!--댓글삭제-->
         function deleteComment(commentId){
+
             var id= $('input[name=id]').val();
             var urlName = "/api/commentDelete/"+id+"/"+commentId;
             var formDataObject = $("#frm2").serializeObject();
             var method = "POST";
+            if(confirm('삭제하시면 복구할수 없습니다. \n 정말로 삭제하시겠습니까??')==true){
             commonAjax(urlName, formDataObject, method);
-        }
+            }else{
+            return;
+             }
+         }
 
        <!--게시글 삭제-->
         $(document).ready(function(){
@@ -166,6 +171,7 @@
                             <div class="text-monospace mr-1"  th:text="${comment.writer.nickname}"></div>
                             <div class="d-flex">
                                 <button id="btn-cmtDelete" class="badge btn-danger" th:if="${comment.isRemoved == false}" th:onclick="'deleteComment('+${comment.id}+');'">삭제</button>
+<!--                                <button id="btn-cmtDelete" class="badge btn-danger" th:if="${comment.isRemoved == false}">삭제</button>-->
                             </div>
                     </th:block>
                             <!--대댓글 쓰기 토글 버튼-->
@@ -218,6 +224,7 @@
 
                                     <p th:text="${reComment.content}"><p>
                                     <button id="btn-reCmtDelete" class="badge btn-danger" th:if="${reComment.isRemoved == false}" th:onclick="'deleteComment('+${reComment.id}+');'">삭제</button>
+<!--                                    <button id="btn-reCmtDelete" class="badge btn-danger" th:if="${reComment.isRemoved == false}" >삭제</button>-->
                                     <hr>
 
                                 </div>
