@@ -75,6 +75,7 @@ public class CommentServiceImpl implements CommentService{
             List<Comment> set = parent.getChildren();
             set.add(comment);
             parent.setChildren(set);
+            parent.setBeParent("Y");
 
             commentRepository.save(comment);
             System.out.println("comment = " + comment);

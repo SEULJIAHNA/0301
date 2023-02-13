@@ -71,6 +71,9 @@ public class Comment extends BaseTimeEntity {
     @JoinColumn(name = "isParent")
     private String isParent;
 
+    @JoinColumn(name = "beParent")
+    private String beParent;
+
     //== 생성자 ==//
     public Comment() {
     }
@@ -107,7 +110,7 @@ public class Comment extends BaseTimeEntity {
         this.isRemoved = true;
     }
     @Builder
-    public Comment(Long id, String content, User writer, Board board, LookBook lookBook, Comment parent, boolean isRemoved, int cDepth, String isParent) {
+    public Comment(Long id, String content, User writer, Board board, LookBook lookBook, Comment parent, boolean isRemoved, int cDepth, String isParent, String beParent) {
         this.id=id;
         this.content = content;
         this.writer = writer;
@@ -117,6 +120,7 @@ public class Comment extends BaseTimeEntity {
         this.isRemoved = isRemoved;
         this.cDepth = cDepth;
         this.isParent = isParent;
+        this.beParent = beParent;
 
     }
     public Comment(String content, User writer, Board board, String isParent) {

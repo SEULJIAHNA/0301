@@ -167,13 +167,16 @@
                             <div class="d-flex">
                                 <button id="btn-cmtDelete" class="badge btn-danger" th:onclick="'deleteComment('+${comment.id}+');'">삭제</button>
                             </div>
-                </th:block>
+                    </th:block>
                             <!--대댓글 쓰기 토글 버튼-->
+                    <th:block th:if="${comment.parent == null}">
                             <button type="button"
                                     data-bs-toggle="collapse"
                                     th:attr="data-bs-target=|#r${comment.id}"
+                                    th:if="${parentId == null}"
                                     style="display:inline" class="btn btn-light">답글쓰기
                             </button>
+                    </th:block>
                                 <!--대댓글 작성폼-->
                                 <div class="collapse" th:id="r + ${comment.id}">
                                     <ul class="list-group list-group-flush"><!--ul로 묶어서 토글버튼 나눔-->
@@ -195,14 +198,15 @@
                                 </div>
                                 <!--대댓글 리스트 영역-->
                                 <!--대댓글 내용-->
+                                <th:block th:if="${comment.parent == null && comment.beParent != null}">
                                 <button type="button"
                                         data-bs-toggle="collapse"
                                         th:attr="data-bs-target=|#re${comment.id}"
                                         style="display:inline" class="btn btn-light">답글보기
                                 </button>
+                                </th:block>
                                 <div class="collapse" th:id="re + ${comment.id}" >
                                 <ul id="reReply--box" class="list-group"  th:each="reComment : ${comment.children}">
-                                    <th:block th:if="${reComment.isParent.equals('N')}">
                                 <div class="children" th:if="${reComment.isRemoved != '1' }">
                                     &nbsp;
                                     <time class="comment4" th:datetime="${reComment.createdDate}"
@@ -229,8 +233,8 @@
                             <!--th:if="${comment.writer != null and comment.writer.equals(#authentication.getName())}" 로그인 풀리면 th:attr="data-bs-target=|#r${comment.id}" 아랫줄에 넣어야함-->
 
     <!--                       //쓸모없음 <button id=".reCommentBtn" type="button" class="btn btn-outline-secondary">답글</button>-->
-                            </ul>
-                                </th:block>
+                                </ul>
+
                                 </div>
                     </td>
                 </ul>
