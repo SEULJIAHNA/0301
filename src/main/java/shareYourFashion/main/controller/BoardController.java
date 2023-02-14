@@ -90,7 +90,7 @@ public class BoardController {
 
     @GetMapping(value = BOARD_CONTENT_VIEW_PAGE_URL) //"/boards/view"; 게시글 상세조회
     public String getBoardViewPage(Model m, BoardRequestDTO boardRequestDTO, HttpServletRequest request, HttpServletResponse response,
-                                    @PageableDefault(page = 0, size = 10, direction = Sort.Direction.DESC) Pageable pageable) throws Exception{
+                                    @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) throws Exception{
         try {
             if(boardRequestDTO.getId() != null){
 

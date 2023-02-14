@@ -142,7 +142,6 @@
 <!--            <a href="#" id="btn-delete" class="btn btn-success" onclick="deleteById(); return false;">삭제하기</a>-->
             <a href="#" id="btn-delete" class="btn btn-success" th:onclick="'deleteById('+${board.id}+');'">삭제</a>
             </form>
-            <div>
             <!--댓글 입력 영역-->
                     <form id="frm2" method="post">
                     <div class="card mb-2 mt-5">
@@ -167,7 +166,7 @@
 <!--                                        <button type="submit" class="btn btn-outline-dark">답글작성</button>-->
                                    </li>
                             </ul>
-                            </div>
+                        </div>
                     </div>
                     </form>
             </div>

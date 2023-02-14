@@ -35,7 +35,7 @@ public class Board extends BaseTimeEntity {
     private User author;
 
     @OneToMany(mappedBy = "board" , cascade = CascadeType.ALL , orphanRemoval = true)
-    @OrderBy("id desc")
+    @OrderBy("comment_id desc")
     private List<Comment> comments = new ArrayList<>();
 
     // hashTag n : 1 board
