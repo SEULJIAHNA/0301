@@ -19,8 +19,10 @@ import org.thymeleaf.util.StringUtils;
 import shareYourFashion.main.constant.ImageType;
 import shareYourFashion.main.domain.*;
 import shareYourFashion.main.domain.valueTypeClass.Image;
+import shareYourFashion.main.dto.BoardRemovedDTO;
 import shareYourFashion.main.dto.BoardSaveRequestDTO;
 import shareYourFashion.main.dto.BoardUpdateDTO;
+import shareYourFashion.main.dto.CommentRemovedDTO;
 import shareYourFashion.main.exception.DoNotFoundImageObjectException;
 import shareYourFashion.main.repository.BoardRepository;
 //import shareYourFashion.main.service.BoardImageUtils;
@@ -171,14 +173,38 @@ public class BoardApiController {
             }
 
 
+//    @ResponseBody
+//    @PostMapping("/api/board/delete/{id}")//글 삭제
+//    public ResponseEntity<?> deleteById(@PathVariable Long id){
+//        System.out.println("id = " + id);
+//        HttpHeaders headers = new HttpHeaders();
+//
+//        try {
+//            boardService.deleteById(id);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            System.out.println("e = " + e);
+//            return new ResponseEntity<>(headers , HttpStatus.BAD_REQUEST);
+//        }
+//
+//        // 성공적으로 게시글 삭제 시 게시글 목록 페이지로 이동
+//        headers.setLocation(URI.create("/boards"));
+//        System.out.println("headers.getLocation() = " + headers.getLocation());
+//        return new ResponseEntity<>(headers , HttpStatus.MOVED_PERMANENTLY);
+//    }
+    //test중
+
     @ResponseBody
     @PostMapping("/api/board/delete/{id}")//글 삭제
-    public ResponseEntity<?> deleteById(@PathVariable Long id){
+    public ResponseEntity<?> deleteById(@PathVariable Long id,
+                                        Model model, UriComponentsBuilder b)
+                                       {
         System.out.println("id = " + id);
         HttpHeaders headers = new HttpHeaders();
 
         try {
-            boardService.deleteById(id);
+            BoardRemovedDTO boardRemovedDTO= new BoardRemovedDTO(id,true);
+            boardService.update(id, boardRemovedDTO);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("e = " + e);

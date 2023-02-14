@@ -35,41 +35,50 @@
             var method = "POST";
             if(confirm('삭제하시면 복구할수 없습니다. \n 정말로 삭제하시겠습니까??')==true){
             commonAjax(urlName, formDataObject, method);
+            alert('댓글이 삭제되었습니다');
             }else{
-            return;
+            return alert('댓글 삭제에 실패하였습니다.');
              }
          }
 
        <!--게시글 삭제-->
-        $(document).ready(function(){
-                $("#btn-delete").on("click",()=> {
-                    deleteById();
-                });
-            });
+<!--        $(document).ready(function(){-->
+<!--                $("#btn-delete").on("click",()=> {-->
+<!--                    deleteById();-->
+<!--                });-->
+<!--            });-->
 
-        function deleteById(){
+        function deleteById(id){
             var id= $('input[name=id]').val();
             var formDataObject = $("#frm").serializeObject();
             var urlName = "/api/board/delete/"+id;
             var method = "POST";
+             if(confirm('삭제하시면 복구할수 없습니다. \n 정말로 삭제하시겠습니까??')==true){
             commonAjax(urlName, formDataObject, method);
-        }
+        }else{
+            return alert('게시글 삭제에 실패하였습니다.');
+             }
+         }
 
 
         <!--댓글저장-->
-        $(document).ready(function(){
-            $("#btn-save").on("click",()=> {
-                commentSave();
-            });
-        });
+<!--        $(document).ready(function(){-->
+<!--            $("#btn-save").on("click",()=> {-->
+<!--                commentSave();-->
+<!--            });-->
+<!--        });-->
 
-        function commentSave(){
+        function commentSave(id){
             var id= $('input[name=id]').val();
             var formDataObject = $("#frm2").serializeObject();
             var urlName = "/api/comments/"+id;
             var method = "POST";
+            if(confirm('댓글을 등록하시겠습니까?')==true){
             commonAjax(urlName, formDataObject, method);
-        }
+        }else{
+            return alert('댓글 삭제에 실패하였습니다.');
+             }
+         }
 
         <!--대댓글저장-->
 
@@ -80,8 +89,13 @@
             var formDataObject = $('#frm_'+parentId).serializeObject();
             var urlName = "/api/comments/"+id+"/"+parentId;
             var method = "POST";
+            if(confirm('답글을 등록하시겠습니까?')==true){
             commonAjax(urlName, formDataObject, method);
-        }
+            alert('답글을 등록 하였습니다.');
+        }else{
+            return alert('답글 등록에 실패하였습니다.');
+             }
+         }
 
 
 
@@ -125,7 +139,8 @@
             <a href="#" id="btn - list" class="btn btn-success" onclick="javascript:location.href='/boards'">목록으로</a>
             <a href="#" id="btn - edit" class="btn btn-success upt_btn"
                th:href="@{/boards/form(id=${board.id})}">수정하기</a>
-            <a href="#" id="btn-delete" class="btn btn-success" onclick="deleteById(); return false;">삭제하기</a>
+<!--            <a href="#" id="btn-delete" class="btn btn-success" onclick="deleteById(); return false;">삭제하기</a>-->
+            <a href="#" id="btn-delete" class="btn btn-success" th:onclick="'deleteById('+${board.id}+');'">삭제</a>
             </form>
             <div>
             <!--댓글 입력 영역-->
@@ -141,7 +156,7 @@
                                     <textarea name = "content" class="form-control" id="exampleFormControlTextarea1" rows="1"
                                               placeholder="댓글을 입력하세요"></textarea>
                                 <div class="right-box">
-                                    <input type="button" id="btn-save" value="등록" class="btn btn-dark mt-3">
+                                    <input type="button" id="btn-save" value="등록" class="btn btn-dark mt-3" th:onclick="'commentSave('+${board.id}+');'">
                                 </div>
 
 <!--                                        대댓글 작성폼-->
@@ -213,7 +228,7 @@
                                 </th:block>
                                 <div class="collapse" th:id="re + ${comment.id}" >
                                 <ul id="reReply--box" class="list-group"  th:each="reComment : ${comment.children}">
-                                <div class="children" th:if="${reComment.isRemoved != '1' }">
+                                <div class="children">
                                     &nbsp;
                                     <time class="comment4" th:datetime="${reComment.createdDate}"
                                           th:text="${#temporals.format(reComment.createdDate, 'yyyy-MM-dd HH:mm')}"

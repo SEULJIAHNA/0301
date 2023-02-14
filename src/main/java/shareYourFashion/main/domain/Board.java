@@ -54,6 +54,8 @@ public class Board extends BaseTimeEntity {
     @JoinColumn(name = "thumbnail_id")
     private Thumbnail thumbnail;
 
+
+    @JoinColumn(name = "isRemoved")
     private boolean isRemoved= false;
 
 
@@ -88,5 +90,10 @@ public class Board extends BaseTimeEntity {
     }
 
     //작성일, 수정일 추가?
+
+
+    public void updateRemoved(boolean isRemoved) {
+        this.isRemoved = isRemoved;
+    }
 
 }

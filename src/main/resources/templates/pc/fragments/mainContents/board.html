@@ -18,6 +18,10 @@
     </div>
 
     <div class="row mb-1" th:each="board : ${boards}">
+        <th:block th:if="${board.isRemoved == true}">
+            <input type="hidden" id="hiddenId" th:value="${board.id}"/>
+        </th:block>
+        <th:block th:if="${board.isRemoved == false}">
         <div class="p-4 p-md-5 mb-4">
             <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
                 <div class="col p-4 d-flex flex-column position-static">
@@ -34,8 +38,8 @@
                 </div>
             </div>
         </div>
+        </th:block>
     </div>
-    </tr>
     <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
             <li class="page-item " th:classappend="${1== boards.pageable.pageNumber +1} ? 'disabled'">

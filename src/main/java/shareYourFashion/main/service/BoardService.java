@@ -15,14 +15,14 @@ import shareYourFashion.main.config.auth.SecurityUtil;
 import shareYourFashion.main.constant.ImageType;
 import shareYourFashion.main.domain.Board;
 //import shareYourFashion.main.domain.BoardImage;
+import shareYourFashion.main.domain.Comment;
 import shareYourFashion.main.domain.valueTypeClass.Image;
-import shareYourFashion.main.dto.BoardResponseDTO;
-import shareYourFashion.main.dto.BoardSaveRequestDTO;
-import shareYourFashion.main.dto.BoardUpdateDTO;
+import shareYourFashion.main.dto.*;
 import shareYourFashion.main.exception.DoNotFoundImageObjectException;
 import shareYourFashion.main.exception.comment.BoardException;
 import shareYourFashion.main.exception.comment.BoardExceptionType;
 import shareYourFashion.main.exception.comment.CommentException;
+import shareYourFashion.main.exception.comment.CommentExceptionType;
 import shareYourFashion.main.repository.BoardRepository;
 import shareYourFashion.main.repository.UserRepository;
 
@@ -129,6 +129,11 @@ public class BoardService {
 //
 //        return board.getId();
         return  id;
+    }
+    @Transactional //삭제하지 않고 DB에는 남아있지만 화면에 안보이게 하기위해
+    public void update(Long id, BoardRemovedDTO boardRemovedDTO) throws Exception{
+        Board board = boardRepository.findById(id).orElseThrow(() -> new Exception());
+        board.updateRemoved(boardRemovedDTO.isRemoved());
     }
 
     @Transactional(readOnly = true)
