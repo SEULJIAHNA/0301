@@ -1,18 +1,10 @@
 package shareYourFashion.main.dto;
 
-import lombok.Builder;
 import lombok.Data;
-import org.springframework.data.domain.Page;
-import shareYourFashion.main.domain.Board;
 import shareYourFashion.main.domain.Comment;
-import shareYourFashion.main.domain.LookBook;
-import shareYourFashion.main.domain.User;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Data

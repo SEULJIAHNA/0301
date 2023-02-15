@@ -90,7 +90,7 @@ public class BoardController {
 
     @GetMapping(value = BOARD_CONTENT_VIEW_PAGE_URL) //"/boards/view"; 게시글 상세조회
     public String getBoardViewPage(Model m, BoardRequestDTO boardRequestDTO, HttpServletRequest request, HttpServletResponse response,
-                                    @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) throws Exception{
+                                    @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) throws Exception{
         try {
             if(boardRequestDTO.getId() != null){
 
@@ -119,6 +119,7 @@ public class BoardController {
                 m.addAttribute("startPage", startPage);
                 m.addAttribute("endPage", endPage);
                 m.addAttribute("comments", commentList);
+                m.addAttribute("cmtCnt", cnt);
 
 //                if (commentList != null && !commentList.isEmpty()){
 //                    m.addAttribute("comments",commentList);

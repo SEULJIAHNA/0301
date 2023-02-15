@@ -3,21 +3,19 @@ package shareYourFashion.main.controller.api;
 
 import com.google.gson.JsonObject;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.util.UUID;
 
 @RestController
 @Controller
 public class SummerImageController {
+
 
     @PostMapping(value="/uploadSummernoteImageFile", produces = "application/json")
     @ResponseBody
@@ -25,7 +23,7 @@ public class SummerImageController {
 
         JsonObject jsonObject = new JsonObject();
 
-        String fileRoot = "C:\\summerimg\\";	//저장될 파일 경로
+        String fileRoot = "C://seul//projectimage";	//저장될 파일 경로
         String originalFileName = multipartFile.getOriginalFilename();	//오리지날 파일명
         String extension = originalFileName.substring(originalFileName.lastIndexOf("."));	//파일 확장자
 

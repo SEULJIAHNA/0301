@@ -119,23 +119,30 @@
         <h1>Board View.</h1>
             <form id="frm" action="/boards/view" method="post" th:object="${board}">
             <input id="id" type="hidden" name="id" th:value="${board.id}">
+            <div class="mb-3" style="display: inline-block">
+<!--                <label class="form-label">조회수</label>-->
+                <div class="form-control" name="viewCnt" th:utext="|조회수 : ${board.view}|" ></div>
+            </div>
+                <div class="mb-3" style="display: inline-block">
+<!--                    <label class="form-label">댓글 수</label>-->
+                    <div class="form-control" name="cnt" th:utext="|댓글수 : ${cmtCnt}|" ></div>
+                </div>
             <div class="mb-3">
-                <label class="form-label">Title.</label>
-                <div class="form-control" name="title" th:utext="${board.title}"></div>
+<!--                <label class="form-label">제목</label>-->
+                <div class="form-control" name="title" th:utext="|제목 : ${board.title}|" ></div>
             </div>
             <div class="mb-3">
-                <label class="form-label">조회수</label>
-                <div class="form-control" name="viewCnt" th:utext="${board.view}"></div>
+<!--                <label class="form-label">글쓴이</label>-->
+                <div class="form-control" name="author" th:utext="|글쓴이 : ${board.author}|"></div>
             </div>
             <div class="mb-3">
-                <label class="form-label">Writer.</label>
-                <div class="form-control" name="author" th:utext="${board.author}"></div>
+<!--                <label class="form-label">내용</label>-->
+                <div class="form-control" name="content" th:utext="|내용 : ${board.content}|"></div>
             </div>
-            <div class="mb-3">
-                <label class="form-label">Content</label>
-                <div class="form-control" name="content" th:utext="${board.content}"></div>
-            </div>
-
+                <time class="comment4" th:datetime="${board.LastModifiedDate}"
+                      th:text="${#temporals.format(board.LastModifiedDate, 'yyyy-MM-dd HH:mm')}"
+                      style="display:inline"><small>2022-10-01</small></time>
+                <hr>
             <a href="#" id="btn - list" class="btn btn-success" onclick="javascript:location.href='/boards'">목록으로</a>
             <a href="#" id="btn - edit" class="btn btn-success upt_btn"
                th:href="@{/boards/form(id=${board.id})}">수정하기</a>
@@ -183,6 +190,9 @@
                             <div th:text="${comment.content}"></div>
                             <span class="text-monospace mr-1">작성자: </span>
                             <div class="text-monospace mr-1"  th:text="${comment.writer.nickname}"></div>
+                            <time class="comment4" th:datetime="${comment.createdDate}"
+                                  th:text="${#temporals.format(comment.createdDate, 'yyyy-MM-dd HH:mm')}"
+                                  style="display:inline"><small>2022-10-01</small></time>
                             <div class="d-flex">
                                 <button id="btn-cmtDelete" class="badge btn-danger" th:if="${comment.isRemoved == false}" th:onclick="'deleteComment('+${comment.id}+');'">삭제</button>
 <!--                                <button id="btn-cmtDelete" class="badge btn-danger" th:if="${comment.isRemoved == false}">삭제</button>-->
@@ -229,11 +239,11 @@
                                 <ul id="reReply--box" class="list-group"  th:each="reComment : ${comment.children}">
                                 <div class="children">
                                     &nbsp;
+                                    <img src="/images/reply-ico.png" alt="답글" style="width:10px; height:10px;" class="replyicon">
+                                    <strong class="writer" th:text="${reComment.writer.nickname}">brince</strong>
                                     <time class="comment4" th:datetime="${reComment.createdDate}"
                                           th:text="${#temporals.format(reComment.createdDate, 'yyyy-MM-dd HH:mm')}"
                                           style="display:inline"><small>2022-10-01</small></time>
-                                    <img src="/images/reply-ico.png" alt="답글" style="width:10px; height:10px;" class="replyicon">
-                                    <strong class="writer" th:text="${reComment.writer.nickname}">brince</strong>
                                     &nbsp;
 
                                     <p th:text="${reComment.content}"><p>
@@ -242,6 +252,7 @@
                                     <hr>
 
                                 </div>
+
 <!--                                <div class="children" th:if="${reComment.isRemoved == '1'}">-->
 <!--                                    <p >-->
 <!--                                        <img src="/images/reply-ico.png" alt="답글" style="display:inline" class="replyicon">-->

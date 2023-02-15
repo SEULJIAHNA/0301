@@ -45,6 +45,14 @@ spring:
     properties:
       hibernate.format_sql: true
 
+
+  #Gson HTTP Message Converter 설정
+  spring:
+    http:
+      converters:
+        preferred-json-mapper=gson:
+
+
   jackson:
     serialization:
       fail-on-empty-beans: false

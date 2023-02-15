@@ -1,0 +1,1 @@
+<img src="/common/getImg.do?fileNM='+item.fileNM+'"style="width:400px;height:400px;vertical-align:middle;"/>

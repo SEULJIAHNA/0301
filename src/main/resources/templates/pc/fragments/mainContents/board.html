@@ -25,12 +25,15 @@
         <div class="p-4 p-md-5 mb-4">
             <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
                 <div class="col p-4 d-flex flex-column position-static">
-                    <strong class="d-inline-block mb-2 text-primary" th:text="${board.id}"></strong>
-                    <strong class="d-inline-block mb-2 text-primary" th:text="${board.view}"></strong> <!--적용안됨-->
-                    <h3 class="mb-0" th:text="${board.title}" th:href="@{/board/form(id=${board.id})}">제목</h3>
-                    <div class="mb-1 text-muted" th:text="${board.author}">작성자</div>
-                    <a href="#" class="stretched-link" th:utext="${board.content}" th:href="@{/boards/view(id=${board.id})}">내용</a>
-                    <p class="card-text mb-auto" th:text="${board.createdDate}">날짜</p>
+                    <strong class="d-inline-block mb-2 text-primary" th:text="|글 번호: ${board.id}|"></strong>
+                    <strong class="d-inline-block mb-2 text-primary" th:text="|조회수: ${board.view}|"></strong> <!--적용안됨-->
+                    <h3 class="mb-0" th:text="|제목: ${board.title}|" th:href="@{/board/form(id=${board.id})}">제목</h3>
+                    <div class="mb-1 text-muted" th:text="|작성자: ${board.author}|">작성자</div>
+                    <a href="#" class="stretched-link ellipsis_function" th:utext="|내용: ${board.content}|" th:href="@{/boards/view(id=${board.id})}">내용</a>
+<!--                    <p class="card-text mb-auto" th:text="${board.createdDate}">날짜</p>-->
+                    <time class="comment4" th:datetime="${board.LastModifiedDate}"
+                          th:text="${#temporals.format(board.LastModifiedDate, 'yyyy-MM-dd HH:mm')}"
+                          style="display:inline"><small>2022-10-01</small></time>
 
                 </div>
                 <div class="col-auto d-none d-lg-block">
