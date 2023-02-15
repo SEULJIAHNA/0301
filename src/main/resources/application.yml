@@ -72,6 +72,7 @@ decorator:
       enable-logging: true # p6spy 프록시 중 많은 자원을 소모 하므로 운영 시 false로 변경 필요함
 
 
+
 # 이미지 파일 등록 경로 지정
 custom:
   path:

@@ -31,20 +31,20 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler(ERROR_URL)
-                .addResourceLocations(ERROR_PAGE_CLASSPATH);
+        registry.addResourceHandler("/summernoteImage/**")
+                .addResourceLocations("file:///C://seul//projectimage");
 
         // user image 외부 경로 접근 허용
-        List<String> imageFolders = Stream.of(ImageType.values())
-                                            .map(ImageType::name)
-                                            .collect(Collectors.toList());
-
-
-        for(String imageFolder : imageFolders) {
-            registry.addResourceHandler(DEFAULT_IMAGE_PATH + imageFolder + "/**")
-                    .addResourceLocations("file:///" + uploadImagesPath + imageFolder + "/");
-
-        }
+//        List<String> imageFolders = Stream.of(ImageType.values())
+//                                            .map(ImageType::name)
+//                                            .collect(Collectors.toList());
+//
+//
+//        for(String imageFolder : imageFolders) {
+//            registry.addResourceHandler(DEFAULT_IMAGE_PATH + imageFolder + "/**")
+//                    .addResourceLocations("file:///" + uploadImagesPath + imageFolder + "/");
+//
+//        }
 
     }
 }

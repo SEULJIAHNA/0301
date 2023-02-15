@@ -4,12 +4,15 @@ package shareYourFashion.main.controller.api;
 import com.google.gson.JsonObject;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.Random;
 import java.util.UUID;
 
 @RestController
@@ -46,6 +49,8 @@ public class SummerImageController {
 
         return jsonObject;
     }
+
+
 
 
 
