@@ -10,7 +10,10 @@ server: # default port 설정 (localhost:8000/ .....)
 spring:
 
   mvc:
-    static-path-pattern=/static/**
+    #static-path-pattern: /static/**
+    converters:
+      preferred-json-mapper: gson
+    #Gson HTTP Message Converter 설정
 
   # spring static file path
   web:
@@ -46,11 +49,6 @@ spring:
       hibernate.format_sql: true
 
 
-  #Gson HTTP Message Converter 설정
-  spring:
-    http:
-      converters:
-        preferred-json-mapper=gson:
 
 
   jackson:

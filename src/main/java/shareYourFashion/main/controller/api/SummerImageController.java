@@ -26,7 +26,7 @@ public class SummerImageController {
 
         JsonObject jsonObject = new JsonObject();
 
-        String fileRoot = "C://seul//projectimage";	//저장될 파일 경로
+        String fileRoot = "C://seul//";	//저장될 파일 경로
         String originalFileName = multipartFile.getOriginalFilename();	//오리지날 파일명
         String extension = originalFileName.substring(originalFileName.lastIndexOf("."));	//파일 확장자
 
