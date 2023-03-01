@@ -32,7 +32,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/summernoteImage/**")
-                .addResourceLocations("file:///C://seul//projectimage");
+                .addResourceLocations("file:///C:/seul/");
 
         // user image 외부 경로 접근 허용
 //        List<String> imageFolders = Stream.of(ImageType.values())
